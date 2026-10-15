@@ -3,10 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { getCollection } from "@/data/collections";
-import { products } from "@/data/products";
-import { services } from "@/data/services";
-import { formatFcfa } from "@/lib/format";
+import type { SearchItem } from "@/lib/search";
 import { useOverlay } from "./useOverlay";
 
 const normalize = (s: string) =>
@@ -15,30 +12,9 @@ const normalize = (s: string) =>
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "");
 
-type Result = { href: string; title: string; subtitle: string; price: string; image: { src: string; width: number; height: number } };
-
-const index: (Result & { haystack: string })[] = [
-  ...products.map((p) => ({
-    href: `/produits/${p.slug}`,
-    title: p.name,
-    subtitle: `${getCollection(p.collection)?.name ?? ""} — ${p.packagingName}`,
-    price: formatFcfa(p.price),
-    image: p.image,
-    haystack: normalize([p.name, p.packagingName, p.tagline, p.intro, getCollection(p.collection)?.name, ...(p.composition ?? [])].join(" ")),
-  })),
-  ...services.map((s) => ({
-    href: `/services/${s.slug}`,
-    title: s.name,
-    subtitle: `Service bien-être — ${s.kicker}`,
-    price: formatFcfa(s.price),
-    image: s.image,
-    haystack: normalize([s.name, s.kicker, s.tagline, s.intro, "service rendez-vous"].join(" ")),
-  })),
-];
-
 const suggestions = ["Gelée Royale", "Collagène", "Thé", "Bleuet", "Serviettes", "Bain ionique"];
 
-export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function SearchOverlay({ open, onClose, index }: { open: boolean; onClose: () => void; index: SearchItem[] }) {
   const ref = useOverlay<HTMLDivElement>(open, onClose);
   const [query, setQuery] = useState("");
 
@@ -46,7 +22,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
     const terms = normalize(query).split(/\s+/).filter(Boolean);
     if (!terms.length) return [];
     return index.filter((r) => terms.every((t) => r.haystack.includes(t))).slice(0, 8);
-  }, [query]);
+  }, [query, index]);
 
   return (
     <div

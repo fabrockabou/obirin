@@ -6,7 +6,7 @@ import { ProductCard } from "@/components/products/ProductCard";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { ArrowLink, Kicker, Price, ProductVisual } from "@/components/ui/primitives";
 import { collections, getCollection } from "@/data/collections";
-import { productsIn } from "@/data/products";
+import { productsIn } from "@/lib/store";
 import { tones } from "@/lib/tones";
 
 type Props = { params: Promise<{ slug: string }> };

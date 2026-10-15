@@ -1,17 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import type { Product } from "@/data/types";
+import { site } from "@/data/site";
+import type { Product, SiteSettings } from "@/data/types";
 import { formatFcfa } from "@/lib/format";
+import { whatsappLink } from "@/lib/whatsapp";
+import { WhatsappIcon } from "@/components/ui/WhatsappIcon";
 import { useProductState } from "./ProductState";
 
 /**
  * Bloc prix + action. Aucun paiement n'est configuré : l'action ouvre une demande d'information
  * pré-remplie (produit et variante) via le formulaire de contact.
  */
-export function ProductOffer({ product, light = false }: { product: Product; light?: boolean }) {
+export function ProductOffer({ product, whatsapp, light = false }: { product: Product; whatsapp?: SiteSettings; light?: boolean }) {
   const { variants, variant, selectVariant } = useProductState();
   const price = variant?.price ?? product.price;
+  const waMessage = [
+    whatsapp?.whatsappGreeting,
+    `Je souhaite commander : ${product.name}${variant ? ` — ${variant.label} (${variant.detail})` : product.format ? ` (${product.format})` : ""}.`,
+    price !== null ? `Prix affiché : ${formatFcfa(price).replace(/[\u202f\u00a0]/g, " ")}.` : "Pouvez-vous m'indiquer le prix ?",
+    `${site.url}/produits/${product.slug}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
   const query = new URLSearchParams({ produit: product.slug, ...(variant ? { variante: variant.id } : {}) });
 
   return (
@@ -52,9 +63,21 @@ export function ProductOffer({ product, light = false }: { product: Product; lig
         <Link href={`/contact?${query.toString()}`} className={`btn ${light ? "btn-light" : "btn-primary"}`}>
           {price === null ? "Demander le prix" : "Demander ce produit"} <span className="btn-arrow" aria-hidden="true">→</span>
         </Link>
+        {whatsapp?.whatsappNumber && (
+          <a
+            href={whatsappLink(whatsapp.whatsappNumber, waMessage)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn bg-[#1f7a4c] text-ivory before:bg-[#17603b]"
+          >
+            <WhatsappIcon /> Commander sur WhatsApp
+          </a>
+        )}
       </div>
       <p className={`mt-4 max-w-sm text-xs ${light ? "text-ivory/60" : "text-ink-soft"}`}>
-        Commande en ligne non disponible pour le moment : votre demande est transmise à l&apos;équipe Obirin, qui vous recontacte.
+        {whatsapp?.whatsappNumber
+          ? "Commandez directement sur WhatsApp, ou envoyez une demande : l'équipe Obirin vous recontacte."
+          : "Commande en ligne non disponible pour le moment : votre demande est transmise à l'équipe Obirin, qui vous recontacte."}
       </p>
     </div>
   );

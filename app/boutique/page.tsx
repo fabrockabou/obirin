@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { ShopCatalog } from "@/components/shop/ShopCatalog";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { collections } from "@/data/collections";
-import { products } from "@/data/products";
+import { getProducts } from "@/lib/store";
 
 export const metadata: Metadata = {
   title: "Boutique — tous nos produits",
@@ -30,7 +30,7 @@ export default function ShopPage() {
       <section className="container-luxe pb-28" aria-label="Produits">
         {/* useSearchParams (filtre dans l'URL) nécessite une frontière Suspense pour la génération statique */}
         <Suspense fallback={<p className="py-20 text-center text-ink-soft">Chargement des produits…</p>}>
-          <ShopCatalog products={products} collections={collections} />
+          <ShopCatalog products={getProducts()} collections={collections} />
         </Suspense>
       </section>
     </main>

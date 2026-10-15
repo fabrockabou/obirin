@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { LogoLockup } from "@/components/brand/Logo";
 import { collections } from "@/data/collections";
 import { MobileMenu } from "./MobileMenu";
+import type { SearchItem } from "@/lib/search";
 import { SearchOverlay } from "./SearchOverlay";
 
 type Theme = "transparent" | "forest" | "ivory";
@@ -19,7 +20,7 @@ const desktopNav = [
   { label: "Notre marque", href: "/notre-marque" },
 ];
 
-export function Header() {
+export function Header({ searchIndex }: { searchIndex: SearchItem[] }) {
   const pathname = usePathname();
   const [theme, setTheme] = useState<Theme>("transparent");
   const [hidden, setHidden] = useState(false);
@@ -188,7 +189,7 @@ export function Header() {
         </div>
       </header>
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} onSearch={() => { setMenuOpen(false); setSearchOpen(true); }} />
-      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} index={searchIndex} />
     </>
   );
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Kicker } from "@/components/ui/primitives";
-import { getProduct } from "@/data/products";
+import { getProduct } from "@/lib/store";
 import type { Product } from "@/data/types";
 import { tones } from "@/lib/tones";
 

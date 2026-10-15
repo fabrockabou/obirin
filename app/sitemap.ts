@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { collections } from "@/data/collections";
-import { products } from "@/data/products";
+import { getProducts } from "@/lib/store";
 import { services } from "@/data/services";
 import { site } from "@/data/site";
 
@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/boutique", 0.9),
     page("/collections", 0.9),
     ...collections.map((c) => page(`/collections/${c.slug}`, 0.8)),
-    ...products.map((p) => ({ ...page(`/produits/${p.slug}`, p.cataloguePage ? 0.8 : 0.5), images: [`${site.url}${p.image.src}`] })),
+    ...getProducts().map((p) => ({ ...page(`/produits/${p.slug}`, p.cataloguePage ? 0.8 : 0.5), images: [`${site.url}${p.image.src}`] })),
     page("/services", 0.8),
     ...services.map((s) => page(`/services/${s.slug}`, 0.7)),
     page("/notre-marque", 0.6),

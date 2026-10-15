@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Kicker } from "@/components/ui/primitives";
 import { collections } from "@/data/collections";
-import { productsIn } from "@/data/products";
+import { productsIn } from "@/lib/store";
 import { servicesIntro } from "@/data/services";
 import { formatFcfa } from "@/lib/format";
 

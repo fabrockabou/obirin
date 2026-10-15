@@ -8,7 +8,7 @@ import { ProductHero } from "@/components/products/ProductHero";
 import { ProductStateProvider } from "@/components/products/ProductState";
 import { Kicker } from "@/components/ui/primitives";
 import { getCollection } from "@/data/collections";
-import { getProduct, products } from "@/data/products";
+import { getProduct, getProducts } from "@/lib/store";
 import { site } from "@/data/site";
 import type { ImageAsset, Product } from "@/data/types";
 import { formatFcfa } from "@/lib/format";
@@ -16,7 +16,7 @@ import { formatFcfa } from "@/lib/format";
 type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+  return getProducts().map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -43,8 +43,8 @@ export default async function ProductPage({ params }: Props) {
   if (!product) notFound();
 
   const collection = getCollection(product.collection)!;
-  const related = product.related.map(getProduct).filter((x): x is Product => Boolean(x));
-  const order = products.filter((p) => p.collection !== "autres-references");
+  const related = product.related.map((s) => getProduct(s)).filter((x): x is Product => Boolean(x));
+  const order = getProducts().filter((p) => p.collection !== "autres-references");
   const i = order.findIndex((p) => p.slug === product.slug);
   const prev = i >= 0 ? order[(i - 1 + order.length) % order.length] : undefined;
   const next = i >= 0 ? order[(i + 1) % order.length] : undefined;

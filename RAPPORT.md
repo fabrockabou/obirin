@@ -67,3 +67,13 @@ Le PDF ne contient aucun texte : chaque page est une image. Toutes les pages ont
 - Logo : mot-symbole **OBIRIN** (gras, typographique, `components/brand/Logo.tsx`), favicon `app/icon.svg`, ouverture du film du Hero.
 - Nom du site, titres de pages, Hero, textes de marque, formulaire, pied de page : **Obirin**.
 - « Green World » reste uniquement là où il désigne la marque des produits ou la source : emballages, textes alternatifs des photos produits, mention « catalogue Green World — octobre 2026 », marque produit dans les données structurées.
+
+## Espace d'administration (/admin)
+- **Créer le compte** (une seule fois, depuis le dossier du site) : `npm run admin:create` — identifiant + mot de passe (10 caractères min., saisie masquée). Relancer la commande remplace le compte et déconnecte toutes les sessions.
+- **Se connecter** : `/admin/connexion` (ex. http://localhost:3001/admin/connexion). Session de 7 jours, 5 essais max. par 15 min.
+- **Produits** : modifier prix, variantes, images (principale, détourée, galerie), textes, bienfaits, composition, conseils, précautions, mise en page, couleur, produits associés ; masquer/afficher ; créer ; supprimer. Le site se met à jour à l'enregistrement, sans rebuild.
+- **Demandes reçues** : toutes les demandes du formulaire, avec appel et réponse WhatsApp en un clic.
+- **Réglages & WhatsApp** : numéro WhatsApp Business (vide = boutons masqués), début des messages, changement de mot de passe.
+- **WhatsApp** : bouton « Commander sur WhatsApp » sur chaque fiche (produit, variante, prix, lien) et « Envoyer aussi sur WhatsApp » après le formulaire (nom, téléphone du visiteur, produit, message).
+- **Données** : `data/store/` (produits, réglages, compte, demandes, images envoyées). Non versionné dans Git (données personnelles et mot de passe) : **à sauvegarder séparément**. `data/products.ts` ne sert plus que de contenu initial.
+- **Hébergement** : il faut un serveur Node avec disque persistant (VPS, Railway/Render avec volume…). Un hébergement sans disque (Vercel) ne conserverait pas les modifications.

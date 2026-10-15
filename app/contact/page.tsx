@@ -4,7 +4,7 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Kicker } from "@/components/ui/primitives";
 import { img } from "@/data/images";
-import { getProduct, products } from "@/data/products";
+import { getProduct, getProducts, getSettings } from "@/lib/store";
 import { getService, services } from "@/data/services";
 import { formatFcfa } from "@/lib/format";
 
@@ -65,9 +65,10 @@ export default async function ContactPage({ searchParams }: Props) {
         <div className="lg:col-span-6 lg:col-start-7 lg:pt-28">
           <ContactForm
             key={`${sujet}-${produit}-${service}`}
-            products={products.map((p) => ({ value: p.slug, label: `${p.name}${p.price !== null ? ` — ${formatFcfa(p.price)}` : ""}` }))}
+            products={getProducts().map((p) => ({ value: p.slug, label: `${p.name}${p.price !== null ? ` — ${formatFcfa(p.price)}` : ""}` }))}
             services={services.map((s) => ({ value: s.slug, label: `${s.name} — ${formatFcfa(s.price)}` }))}
             defaults={{ sujet, produit, variante: variant?.id ?? "", service }}
+            whatsapp={{ number: getSettings().whatsappNumber, greeting: getSettings().whatsappGreeting }}
           />
         </div>
       </section>

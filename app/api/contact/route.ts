@@ -1,7 +1,5 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import { NextResponse } from "next/server";
-import { getProduct } from "@/data/products";
+import { getProduct, saveRequest } from "@/lib/store";
 import { getService } from "@/data/services";
 
 export const runtime = "nodejs";
@@ -24,7 +22,7 @@ const clean = (v: unknown, max = 2000) => (typeof v === "string" ? v.trim().slic
 /**
  * Réception des demandes (information produit, rendez-vous, question).
  * - Si CONTACT_WEBHOOK_URL est défini, la demande est transmise en JSON à ce webhook (CRM, e-mail, WhatsApp Business…).
- * - Sinon, elle est enregistrée dans data/.requests/ (fonctionne sur un serveur Node ; pas sur un hébergement sans disque).
+ * - Elle est toujours enregistrée dans le stockage du site (consultable dans /admin/demandes).
  * La réponse n'indique un succès que si l'une de ces deux opérations a réellement abouti.
  */
 export async function POST(request: Request) {
@@ -64,20 +62,22 @@ export async function POST(request: Request) {
     recuLe: new Date().toISOString(),
   };
 
+  // 1) la demande est toujours enregistrée (visible dans /admin/demandes)
   try {
-    const webhook = process.env.CONTACT_WEBHOOK_URL;
-    if (webhook) {
-      const res = await fetch(webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(record) });
-      if (!res.ok) throw new Error(`webhook ${res.status}`);
-    } else {
-      const dir = path.join(process.cwd(), "data", ".requests");
-      await fs.mkdir(dir, { recursive: true });
-      const file = path.join(dir, `${record.recuLe.replace(/[:.]/g, "-")}-${Math.random().toString(36).slice(2, 8)}.json`);
-      await fs.writeFile(file, JSON.stringify(record, null, 2), "utf8");
-    }
+    saveRequest(record);
   } catch (e) {
     console.error("[contact] échec d'enregistrement", e);
     return NextResponse.json({ ok: false, error: "Votre demande n'a pas pu être enregistrée. Merci de réessayer plus tard." }, { status: 500 });
+  }
+  // 2) transmission facultative à un webhook (e-mail, CRM…) — un échec ici ne perd pas la demande
+  const webhook = process.env.CONTACT_WEBHOOK_URL;
+  if (webhook) {
+    try {
+      const res = await fetch(webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(record) });
+      if (!res.ok) throw new Error(`webhook ${res.status}`);
+    } catch (e) {
+      console.error("[contact] webhook en échec (demande conservée dans l'administration)", e);
+    }
   }
 
   return NextResponse.json({ ok: true });

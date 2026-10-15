@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLink, Kicker, Price, ProductVisual } from "@/components/ui/primitives";
-import { getProduct } from "@/data/products";
+import { getProduct, getProducts } from "@/lib/store";
 import type { Product } from "@/data/types";
 
 const lead = { slug: "nutrition-ovarienne", ratio: "aspect-[5/4]" };
@@ -26,7 +26,20 @@ function Card({ product, ratio, index }: { product: Product; ratio: string; inde
   );
 }
 
+/** Produits mis en avant ; si l'un d'eux est masqué depuis l'administration, il est remplacé par un autre produit visible. */
+function pickProducts(): Product[] {
+  const preferred = [lead.slug, aside.slug, ...row.map((r) => r.slug)];
+  const picks = preferred.map((s) => getProduct(s)).filter((p): p is Product => Boolean(p));
+  for (const p of getProducts()) {
+    if (picks.length >= preferred.length) break;
+    if (!picks.includes(p)) picks.push(p);
+  }
+  return picks;
+}
+
 export function ProductSelection() {
+  const [leadProduct, asideProduct, ...rowProducts] = pickProducts();
+  if (!leadProduct) return null;
   return (
     <section className="bg-ivory py-28 lg:py-40" aria-labelledby="selection-titre">
       <div className="container-luxe">
@@ -41,23 +54,26 @@ export function ProductSelection() {
                 Une sélection de nos produits phares — santé féminine, beauté &amp; bien-être. Prix client en FCFA.
               </p>
             </div>
-            <div data-reveal="up" className="hidden lg:block">
-              <Card product={getProduct(aside.slug)!} ratio={aside.ratio} index={1} />
-            </div>
+            {asideProduct && (
+              <div data-reveal="up" className="hidden lg:block">
+                <Card product={asideProduct} ratio={aside.ratio} index={1} />
+              </div>
+            )}
           </div>
           <div data-reveal="up" className="lg:col-span-7 lg:col-start-6">
-            <Card product={getProduct(lead.slug)!} ratio={lead.ratio} index={0} />
+            <Card product={leadProduct} ratio={lead.ratio} index={0} />
           </div>
-          <div data-reveal="up" className="lg:hidden">
-            <Card product={getProduct(aside.slug)!} ratio={aside.ratio} index={1} />
-          </div>
+          {asideProduct && (
+            <div data-reveal="up" className="lg:hidden">
+              <Card product={asideProduct} ratio={aside.ratio} index={1} />
+            </div>
+          )}
         </div>
         <div className="mt-16 grid gap-16 sm:grid-cols-2 lg:mt-28 lg:grid-cols-12 lg:gap-x-8">
-          {row.map(({ slug, cls, ratio }, i) => {
-            const p = getProduct(slug);
-            if (!p) return null;
+          {rowProducts.map((p, i) => {
+            const { cls, ratio } = row[i];
             return (
-              <div key={slug} className={cls} data-reveal="up" data-reveal-delay={String(i * 0.08)}>
+              <div key={p.slug} className={cls} data-reveal="up" data-reveal-delay={String(i * 0.08)}>
                 <Card product={p} ratio={ratio} index={i + 2} />
               </div>
             );

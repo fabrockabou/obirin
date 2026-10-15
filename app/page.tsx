@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { HeroScroll } from "@/components/hero/HeroScroll";
 import { BrandSignature } from "@/components/sections/BrandSignature";
 import { CareRitual } from "@/components/sections/CareRitual";
+
+const ritualSlugs = ["savon-olive", "lotion-tonique-bleuet", "serum-visage-bleuet", "creme-contour-yeux-bleuet"];
+import { getProduct } from "@/lib/store";
+import type { Product } from "@/data/types";
 import { Philosophy } from "@/components/sections/Philosophy";
 import { ProductSelection } from "@/components/sections/ProductSelection";
 import { ServicesHighlight } from "@/components/sections/ServicesHighlight";
@@ -30,7 +34,7 @@ export default function HomePage() {
       <Philosophy />
       <Universes />
       <ProductSelection />
-      <CareRitual />
+      <CareRitual products={ritualSlugs.map((s) => getProduct(s)).filter((p): p is Product => Boolean(p))} />
       <ServicesHighlight />
       <BrandSignature />
     </main>

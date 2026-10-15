@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { Kicker, Price, ProductVisual } from "@/components/ui/primitives";
-import { getProduct } from "@/data/products";
+import type { Product } from "@/data/types";
 import { getGsap, prefersReducedMotion } from "@/lib/gsap";
 
 // Le rituel est construit à partir des conseils d'utilisation du catalogue (pages 15 à 18) :
@@ -16,7 +16,9 @@ const steps = [
   { slug: "creme-contour-yeux-bleuet", verb: "Illuminer", line: "Tapoter délicatement sur le contour des yeux, seule ou après l'essence." },
 ];
 
-export function CareRitual() {
+
+
+export function CareRitual({ products }: { products: Product[] }) {
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
 
@@ -62,7 +64,8 @@ export function CareRitual() {
         </div>
 
         {steps.map((s, i) => {
-          const p = getProduct(s.slug)!;
+          const p = products.find((x) => x.slug === s.slug);
+          if (!p) return null;
           return (
             <article key={s.slug} data-ritual-card className="container-luxe lg:w-[34vw] lg:min-w-[30rem] lg:max-w-none lg:px-[2.5vw]">
               <Link href={`/produits/${p.slug}`} className="group block">

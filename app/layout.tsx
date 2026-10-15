@@ -2,8 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { Header } from "@/components/navigation/Header";
 import { Footer } from "@/components/navigation/Footer";
+import { HideOnAdmin } from "@/components/navigation/HideOnAdmin";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { site } from "@/data/site";
+import { buildSearchIndex } from "@/lib/search";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -53,9 +55,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Aller au contenu
         </a>
-        <Header />
+        <HideOnAdmin>
+          <Header searchIndex={buildSearchIndex()} />
+        </HideOnAdmin>
         <MotionProvider>{children}</MotionProvider>
-        <Footer />
+        <HideOnAdmin>
+          <Footer />
+        </HideOnAdmin>
       </body>
     </html>
   );

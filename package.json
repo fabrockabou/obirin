@@ -8,7 +8,8 @@
     "start": "next start -p 3000",
     "lint": "tsc --noEmit",
     "assets": "node scripts/build-assets.mjs",
-    "hero-video": "node scripts/render-hero-video.mjs"
+    "hero-video": "node scripts/render-hero-video.mjs",
+    "admin:create": "node scripts/create-admin.mjs"
   },
   "dependencies": {
     "gsap": "3.13.0",

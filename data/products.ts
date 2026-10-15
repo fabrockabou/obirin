@@ -1,5 +1,8 @@
 // Catalogue Green World — Santé féminine, édition octobre 2026.
-// Source unique de vérité pour les produits : chaque texte ci-dessous est repris des fiches du
+// Contenu INITIAL des produits : au premier démarrage, il est copié dans le stockage modifiable
+// (lib/store.ts → data/store/products.json). Ensuite, les produits se gèrent depuis /admin et ce
+// fichier ne sert plus que de point de départ (ou de réinitialisation).
+// Source des textes : chaque texte ci-dessous est repris des fiches du
 // catalogue PDF (pages imprimées 4 à 19) ou, pour les références « hors catalogue », du texte
 // imprimé sur l'emballage. Aucune information n'est inventée ; les champs absents de la source
 // sont simplement omis.
@@ -12,7 +15,7 @@ const NOTE_COMPLEMENT =
   "Ce complément alimentaire s'intègre dans un mode de vie sain et ne se substitue pas à une alimentation équilibrée.";
 const PRISE_REPAS = "À prendre avec un grand verre d'eau, de préférence pendant un repas.";
 
-export const products: Product[] = [
+export const defaultProducts: Product[] = [
   // ───────────────────────────── SANTÉ FÉMININE ─────────────────────────────
   {
     slug: "the-soin-des-seins",
@@ -716,6 +719,3 @@ export const products: Product[] = [
   },
 ];
 
-export const getProduct = (slug: string) => products.find((p) => p.slug === slug);
-export const productsIn = (collection: Product["collection"]) => products.filter((p) => p.collection === collection);
-export const catalogueProducts = products.filter((p) => p.cataloguePage !== null);

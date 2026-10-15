@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { getCollection } from "@/data/collections";
-import type { Product } from "@/data/types";
+import type { Product, SiteSettings } from "@/data/types";
+import { getSettings } from "@/lib/store";
 import { tones } from "@/lib/tones";
 import { ProductGallery } from "./ProductGallery";
 import { ProductOffer } from "./ProductOffer";
@@ -41,7 +42,7 @@ function Title({ product, light = false, size = "lg" }: { product: Product; ligh
 }
 
 /** Mise en page « éditoriale » : texte large à gauche, visuel encadré et portrait éditorial superposés. */
-function Editorial({ product }: { product: Product }) {
+function Editorial({ product, whatsapp }: { product: Product; whatsapp: SiteSettings }) {
   const tone = tones[product.tone];
   return (
     <section className="relative overflow-hidden bg-ivory pb-24 pt-32 lg:pb-32 lg:pt-40">
@@ -52,7 +53,7 @@ function Editorial({ product }: { product: Product }) {
           <div className="lg:col-span-6 lg:pt-10">
             <Title product={product} />
             <div data-hero-item className="mt-10">
-              <ProductOffer product={product} />
+              <ProductOffer product={product} whatsapp={whatsapp} />
             </div>
           </div>
           <div className="relative lg:col-span-5 lg:col-start-8">
@@ -72,7 +73,7 @@ function Editorial({ product }: { product: Product }) {
 }
 
 /** Mise en page « immersive » : plein écran sur la couleur profonde de l'emballage, nom monumental. */
-function Immersive({ product }: { product: Product }) {
+function Immersive({ product, whatsapp }: { product: Product; whatsapp: SiteSettings }) {
   const tone = tones[product.tone];
   const visual = product.cutout ?? product.image;
   return (
@@ -109,7 +110,7 @@ function Immersive({ product }: { product: Product }) {
               />
             </div>
             <div data-hero-item className="lg:col-span-3">
-              <ProductOffer product={product} light />
+              <ProductOffer product={product} whatsapp={whatsapp} light />
             </div>
           </div>
         </div>
@@ -130,7 +131,7 @@ function Immersive({ product }: { product: Product }) {
 }
 
 /** Mise en page « split » : galerie collante à gauche, informations qui défilent à droite. */
-function Split({ product }: { product: Product }) {
+function Split({ product, whatsapp }: { product: Product; whatsapp: SiteSettings }) {
   const tone = tones[product.tone];
   return (
     <section className="relative bg-ivory pb-16 pt-28 lg:pt-32">
@@ -143,7 +144,7 @@ function Split({ product }: { product: Product }) {
           <div className="lg:col-span-5 lg:col-start-8 lg:py-10">
             <Title product={product} />
             <div data-hero-item className="mt-10 border-t border-forest/15 pt-10">
-              <ProductOffer product={product} />
+              <ProductOffer product={product} whatsapp={whatsapp} />
             </div>
           </div>
         </div>
@@ -153,7 +154,7 @@ function Split({ product }: { product: Product }) {
 }
 
 /** Mise en page « portrait » : photographie éditoriale pleine hauteur, produit en médaillon. */
-function Portrait({ product }: { product: Product }) {
+function Portrait({ product, whatsapp }: { product: Product; whatsapp: SiteSettings }) {
   const tone = tones[product.tone];
   return (
     <section className="relative bg-ivory">
@@ -181,7 +182,7 @@ function Portrait({ product }: { product: Product }) {
             <Title product={product} />
           </div>
           <div data-hero-item className="mt-10">
-            <ProductOffer product={product} />
+            <ProductOffer product={product} whatsapp={whatsapp} />
           </div>
         </div>
       </div>
@@ -190,14 +191,15 @@ function Portrait({ product }: { product: Product }) {
 }
 
 export function ProductHero({ product }: { product: Product }) {
+  const whatsapp = getSettings();
   switch (product.layout) {
     case "immersive":
-      return <Immersive product={product} />;
+      return <Immersive product={product} whatsapp={whatsapp} />;
     case "split":
-      return <Split product={product} />;
+      return <Split product={product} whatsapp={whatsapp} />;
     case "portrait":
-      return <Portrait product={product} />;
+      return <Portrait product={product} whatsapp={whatsapp} />;
     default:
-      return <Editorial product={product} />;
+      return <Editorial product={product} whatsapp={whatsapp} />;
   }
 }

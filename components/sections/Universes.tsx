@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Kicker } from "@/components/ui/primitives";
 import { collections } from "@/data/collections";
-import { productsIn } from "@/data/products";
+import { productsIn } from "@/lib/store";
 import { servicesIntro } from "@/data/services";
 
 type Tile = { href: string; title: string; kicker: string; count: string; image: { src: string; alt: string }; span: string; ratio: string };

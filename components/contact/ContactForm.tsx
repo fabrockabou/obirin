@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { WhatsappIcon } from "@/components/ui/WhatsappIcon";
+import { whatsappLink } from "@/lib/whatsapp";
 
 type Option = { value: string; label: string };
 type Status = { state: "idle" } | { state: "sending" } | { state: "success" } | { state: "error"; message: string };
@@ -12,14 +14,18 @@ export function ContactForm({
   products,
   services,
   defaults,
+  whatsapp,
 }: {
   products: Option[];
   services: Option[];
   defaults: { sujet: string; produit: string; variante: string; service: string };
+  /** Numéro WhatsApp Business (réglé dans l'administration) ; vide = pas de bouton */
+  whatsapp: { number: string; greeting: string };
 }) {
   const [sujet, setSujet] = useState(defaults.sujet);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>({ state: "idle" });
+  const [sent, setSent] = useState<Record<string, string>>({});
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,6 +41,7 @@ export function ContactForm({
       });
       const json = (await res.json().catch(() => ({}))) as { ok?: boolean; errors?: Record<string, string>; error?: string };
       if (res.ok && json.ok) {
+        setSent(payload);
         setStatus({ state: "success" });
         return;
       }
@@ -55,6 +62,19 @@ export function ContactForm({
         <p className="kicker text-gold-soft">Demande enregistrée</p>
         <p className="mt-4 font-display text-4xl leading-tight">Merci, votre demande a bien été transmise à l&apos;équipe Obirin.</p>
         <p className="mt-4 text-ivory/75">Vous serez recontacté(e) au numéro ou à l&apos;adresse indiqués.</p>
+        {whatsapp.number && (
+          <div className="mt-8 rounded-2xl bg-ivory/10 p-5">
+            <p className="text-sm text-ivory/85">Pour une réponse plus rapide, envoyez aussi votre demande sur WhatsApp :</p>
+            <a
+              href={whatsappLink(whatsapp.number, whatsappMessage(sent, whatsapp.greeting, products, services))}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn mt-4 bg-[#25d366] text-forest before:bg-[#1ebe5b]"
+            >
+              <WhatsappIcon /> Envoyer aussi sur WhatsApp
+            </a>
+          </div>
+        )}
         <button type="button" onClick={() => setStatus({ state: "idle" })} className="btn btn-ghost-light mt-8">
           Envoyer une autre demande
         </button>
@@ -194,4 +214,22 @@ export function ContactForm({
       </button>
     </form>
   );
+}
+
+/** Message WhatsApp pré-rempli avec ce que le visiteur a saisi (dont son numéro de téléphone). */
+function whatsappMessage(d: Record<string, string>, greeting: string, products: Option[], services: Option[]) {
+  const label = (list: Option[], v?: string) => list.find((o) => o.value === v)?.label.split(" — ")[0];
+  const subject = d.sujet === "rendez-vous" ? "Demande de rendez-vous" : d.sujet === "question" ? "Question" : "Demande produit";
+  return [
+    greeting,
+    `${subject} via le site.`,
+    `Nom : ${d.nom ?? ""}`,
+    d.telephone && `Téléphone : ${d.telephone}`,
+    d.email && `E-mail : ${d.email}`,
+    d.produit && `Produit : ${label(products, d.produit) ?? d.produit}${d.variante ? ` (${d.variante})` : ""}`,
+    d.service && `Service : ${label(services, d.service) ?? d.service}`,
+    d.message && `Message : ${d.message}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
 }

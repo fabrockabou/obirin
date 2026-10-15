@@ -67,6 +67,10 @@ export type Product = {
   tone: ProductTone;
   related: string[];
   sourceNote?: string;
+  /** Masqué du site (géré depuis l'administration) */
+  hidden?: boolean;
+  /** Date de dernière modification depuis l'administration (ISO) */
+  updatedAt?: string;
 };
 
 export type Collection = {
@@ -101,4 +105,26 @@ export type Service = {
   secondaryImage?: ImageAsset;
   pageImage: ImageAsset;
   cataloguePage: number;
+};
+
+export type SiteSettings = {
+  /** Numéro WhatsApp Business au format international, chiffres uniquement (ex. 2250700000000). Vide = boutons masqués. */
+  whatsappNumber: string;
+  /** Phrase d'accroche ajoutée en tête des messages WhatsApp pré-remplis */
+  whatsappGreeting: string;
+};
+
+export type ContactRequest = {
+  id: string;
+  nom: string;
+  telephone: string;
+  email: string;
+  sujet: string;
+  produit: string;
+  produitNom?: string;
+  variante: string;
+  service: string;
+  serviceNom?: string;
+  message: string;
+  recuLe: string;
 };
