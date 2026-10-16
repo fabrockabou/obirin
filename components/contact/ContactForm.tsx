@@ -26,11 +26,27 @@ export function ContactForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>({ state: "idle" });
   const [sent, setSent] = useState<Record<string, string>>({});
+  const [waOpened, setWaOpened] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const payload = Object.fromEntries(form.entries()) as Record<string, string>;
+    // Ouverture automatique de WhatsApp : l'onglet est ouvert tout de suite, pendant le clic (sinon les
+    // navigateurs le bloquent), puis dirigé vers WhatsApp si l'envoi réussit, ou refermé en cas d'erreur.
+    let waWindow: Window | null = null;
+    // pas d'ouverture si un champ obligatoire manque (évite un onglet ouvert puis refermé aussitôt)
+    const looksComplete =
+      (payload.nom ?? "").trim().length >= 2 && Boolean((payload.telephone ?? "").trim() || (payload.email ?? "").trim()) && form.get("consentement") === "on";
+    if (whatsapp.number && looksComplete) {
+      waWindow = window.open("", "_blank");
+      if (waWindow) {
+        waWindow.opener = null;
+        waWindow.document.title = "Ouverture de WhatsApp…";
+        waWindow.document.body.innerHTML =
+          '<p style="font-family:system-ui,sans-serif;padding:2rem;color:#0a2a1d">Ouverture de WhatsApp…</p>';
+      }
+    }
     setStatus({ state: "sending" });
     setErrors({});
     try {
@@ -41,10 +57,20 @@ export function ContactForm({
       });
       const json = (await res.json().catch(() => ({}))) as { ok?: boolean; errors?: Record<string, string>; error?: string };
       if (res.ok && json.ok) {
+        const link = whatsapp.number ? whatsappLink(whatsapp.number, whatsappMessage(payload, whatsapp.greeting, products, services)) : "";
+        if (waWindow && !waWindow.closed) {
+          waWindow.location.href = link;
+          setWaOpened(true);
+        } else if (link && looksComplete && window.matchMedia("(pointer: coarse)").matches) {
+          // téléphone dont le navigateur bloque les nouveaux onglets : on bascule vers WhatsApp (l'application s'ouvre)
+          setWaOpened(true);
+          window.setTimeout(() => window.location.assign(link), 600);
+        }
         setSent(payload);
         setStatus({ state: "success" });
         return;
       }
+      waWindow?.close();
       if (json.errors) {
         setErrors(json.errors);
         setStatus({ state: "error", message: "Merci de vérifier les champs indiqués." });
@@ -52,6 +78,7 @@ export function ContactForm({
       }
       setStatus({ state: "error", message: json.error ?? "Une erreur est survenue. Merci de réessayer." });
     } catch {
+      waWindow?.close();
       setStatus({ state: "error", message: "Connexion impossible. Vérifiez votre réseau puis réessayez." });
     }
   }
@@ -64,7 +91,11 @@ export function ContactForm({
         <p className="mt-4 text-ivory/75">Vous serez recontacté(e) au numéro ou à l&apos;adresse indiqués.</p>
         {whatsapp.number && (
           <div className="mt-8 rounded-2xl bg-ivory/10 p-5">
-            <p className="text-sm text-ivory/85">Pour une réponse plus rapide, envoyez aussi votre demande sur WhatsApp :</p>
+            <p className="text-sm text-ivory/85">
+              {waOpened
+                ? "WhatsApp s'est ouvert avec votre message prêt : appuyez sur « Envoyer » pour nous l'adresser depuis votre numéro. Si rien ne s'est ouvert :"
+                : "Pour une réponse plus rapide, envoyez aussi votre demande sur WhatsApp :"}
+            </p>
             <a
               href={whatsappLink(whatsapp.number, whatsappMessage(sent, whatsapp.greeting, products, services))}
               target="_blank"
