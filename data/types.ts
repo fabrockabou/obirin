@@ -137,6 +137,10 @@ export type ContactRequest = {
   recuLe: string;
   /** Résultat de l'envoi automatique sur WhatsApp */
   whatsapp?: NotifyResult;
+  /** Origine : formulaire du site, bouton « Commander sur WhatsApp » d'une fiche, ou bouton WhatsApp flottant */
+  source?: "formulaire" | "whatsapp-produit" | "whatsapp-flottant";
+  /** Page d'où le visiteur a cliqué (clics WhatsApp) */
+  page?: string;
 };
 
 /** Adhésion saisie depuis l'administration (indépendante du site public). */

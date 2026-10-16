@@ -3,6 +3,8 @@ import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { Header } from "@/components/navigation/Header";
 import { Footer } from "@/components/navigation/Footer";
 import { HideOnAdmin } from "@/components/navigation/HideOnAdmin";
+import { WhatsappFloat } from "@/components/navigation/WhatsappFloat";
+import { getSettings } from "@/lib/store";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { site } from "@/data/site";
 import { buildSearchIndex } from "@/lib/search";
@@ -61,6 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MotionProvider>{children}</MotionProvider>
         <HideOnAdmin>
           <Footer />
+          <WhatsappFloat number={getSettings().whatsappNumber} greeting={getSettings().whatsappGreeting} />
         </HideOnAdmin>
       </body>
     </html>

@@ -238,7 +238,7 @@ export function HeroScroll() {
           </span>
         </div>
         {/* indicateur de progression discret */}
-        <div className="absolute bottom-8 right-[clamp(1.25rem,4vw,3.5rem)] hidden items-center gap-4 text-ivory/60 md:js-motion:flex" aria-hidden="true">
+        <div className="absolute bottom-8 left-[clamp(1.25rem,4vw,3.5rem)] hidden items-center gap-4 text-ivory/60 md:js-motion:flex" aria-hidden="true">
           <span className="kicker tabular-nums">{String(chapter + 1).padStart(2, "0")}</span>
           <span className="relative h-px w-28 bg-ivory/20">
             <span className="absolute inset-y-0 left-0 bg-gold-soft" style={{ width: `${progress * 100}%` }} />

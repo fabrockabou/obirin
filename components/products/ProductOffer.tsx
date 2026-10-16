@@ -4,6 +4,7 @@ import Link from "next/link";
 import { site } from "@/data/site";
 import type { Product, SiteSettings } from "@/data/types";
 import { formatFcfa } from "@/lib/format";
+import { trackWhatsappClick } from "@/lib/track";
 import { whatsappLink } from "@/lib/whatsapp";
 import { WhatsappIcon } from "@/components/ui/WhatsappIcon";
 import { useProductState } from "./ProductState";
@@ -59,26 +60,40 @@ export function ProductOffer({ product, whatsapp, light = false }: { product: Pr
         )}
       </div>
 
-      <div className="mt-8 flex flex-wrap gap-3">
-        <Link href={`/contact?${query.toString()}`} className={`btn ${light ? "btn-light" : "btn-primary"}`}>
-          {price === null ? "Demander le prix" : "Demander ce produit"} <span className="btn-arrow" aria-hidden="true">→</span>
-        </Link>
-        {whatsapp?.whatsappNumber && (
-          <a
-            href={whatsappLink(whatsapp.whatsappNumber, waMessage)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn bg-[#1f7a4c] text-ivory before:bg-[#17603b]"
-          >
-            <WhatsappIcon /> Commander sur WhatsApp
-          </a>
-        )}
-      </div>
-      <p className={`mt-4 max-w-sm text-xs ${light ? "text-ivory/60" : "text-ink-soft"}`}>
-        {whatsapp?.whatsappNumber
-          ? "Commandez directement sur WhatsApp, ou envoyez une demande : l'équipe Obirin vous recontacte."
-          : "Commande en ligne non disponible pour le moment : votre demande est transmise à l'équipe Obirin, qui vous recontacte."}
-      </p>
+      {whatsapp?.whatsappNumber ? (
+        <>
+          {/* La demande part directement sur WhatsApp, depuis le numéro du visiteur ; le clic est enregistré dans l'administration. */}
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a
+              href={whatsappLink(whatsapp.whatsappNumber, waMessage)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackWhatsappClick({ source: "whatsapp-produit", produit: product.slug, variante: variant?.id })}
+              className="btn bg-[#1f7a4c] text-ivory before:bg-[#17603b]"
+            >
+              <WhatsappIcon /> {price === null ? "Demander le prix sur WhatsApp" : "Commander sur WhatsApp"}
+            </a>
+          </div>
+          <p className={`mt-4 max-w-sm text-xs ${light ? "text-ivory/60" : "text-ink-soft"}`}>
+            Votre message est prêt : il ne reste qu&apos;à l&apos;envoyer depuis votre WhatsApp. Pas de WhatsApp ?{" "}
+            <Link href={`/contact?${query.toString()}`} className="font-semibold underline">
+              Envoyer une demande par formulaire
+            </Link>
+            .
+          </p>
+        </>
+      ) : (
+        <>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href={`/contact?${query.toString()}`} className={`btn ${light ? "btn-light" : "btn-primary"}`}>
+              {price === null ? "Demander le prix" : "Demander ce produit"} <span className="btn-arrow" aria-hidden="true">→</span>
+            </Link>
+          </div>
+          <p className={`mt-4 max-w-sm text-xs ${light ? "text-ivory/60" : "text-ink-soft"}`}>
+            Commande en ligne non disponible pour le moment : votre demande est transmise à l&apos;équipe Obirin, qui vous recontacte.
+          </p>
+        </>
+      )}
     </div>
   );
 }

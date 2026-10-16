@@ -15,7 +15,7 @@ export default function AdminRequestsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <h1 className="display text-5xl text-forest">Demandes reçues</h1>
-      <p className="mt-2 text-ink-soft">Demandes envoyées par le formulaire de contact du site, de la plus récente à la plus ancienne.</p>
+      <p className="mt-2 text-ink-soft">Demandes du formulaire de contact et clics sur les boutons WhatsApp du site, de la plus récente à la plus ancienne.</p>
 
       {requests.length === 0 ? (
         <p className="mt-10 rounded-2xl bg-ivory p-8 text-ink-soft">Aucune demande pour le moment.</p>
@@ -24,16 +24,29 @@ export default function AdminRequestsPage() {
           {requests.map((r) => {
             const about = r.produitNom ?? r.serviceNom;
             const phone = r.telephone.replace(/\D/g, "");
+            const viaWhatsapp = r.source === "whatsapp-produit" || r.source === "whatsapp-flottant";
             return (
-              <li key={r.id} className="rounded-2xl border border-forest/10 bg-ivory p-6">
+              <li key={r.id} className={`rounded-2xl border p-6 ${viaWhatsapp ? "border-[#25d366]/40 bg-[#25d366]/[0.06]" : "border-forest/10 bg-ivory"}`}>
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="text-lg font-semibold text-forest">{r.nom}</p>
-                    <p className="text-sm text-ink-soft">
-                      {date.format(new Date(r.recuLe))} · {sujetLabel[r.sujet] ?? r.sujet}
-                      {about ? ` · ${about}` : ""}
-                      {r.variante ? ` (${r.variante})` : ""}
+                    <p className="text-lg font-semibold text-forest">
+                      {viaWhatsapp
+                        ? r.source === "whatsapp-produit"
+                          ? `Commande via WhatsApp${about ? ` — ${about}` : ""}`
+                          : "Contact via le bouton WhatsApp"
+                        : r.nom}
                     </p>
+                    <p className="text-sm text-ink-soft">
+                      {date.format(new Date(r.recuLe))}
+                      {viaWhatsapp ? "" : ` · ${sujetLabel[r.sujet] ?? r.sujet}${about ? ` · ${about}` : ""}`}
+                      {r.variante ? ` (${r.variante})` : ""}
+                      {r.page ? ` · depuis ${r.page}` : ""}
+                    </p>
+                    {viaWhatsapp && (
+                      <p className="mt-2 text-sm text-ink-soft">
+                        Le visiteur a ouvert WhatsApp avec le message prêt : son nom et son numéro apparaissent dans votre WhatsApp s&apos;il l&apos;a envoyé.
+                      </p>
+                    )}
                   </div>
                   <form action={deleteRequestAction}>
                     <input type="hidden" name="id" value={r.id} />
