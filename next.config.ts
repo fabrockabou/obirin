@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // pdfkit lit ses polices sur le disque : il doit rester hors du bundle
+  serverExternalPackages: ["pdfkit"],
   // envoi d'images depuis l'administration (12 Mo par image, plusieurs images par enregistrement)
   experimental: { serverActions: { bodySizeLimit: "40mb" } },
   images: {

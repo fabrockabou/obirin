@@ -128,3 +128,20 @@ export type ContactRequest = {
   message: string;
   recuLe: string;
 };
+
+/** Adhésion saisie depuis l'administration (indépendante du site public). */
+export type Adhesion = {
+  id: string;
+  nom: string;
+  prenom: string;
+  dateNaissance: string; // AAAA-MM-JJ
+  pays: string;
+  emails: string[];
+  telephones: string[];
+  adresse: string;
+  dateAdhesion: string; // AAAA-MM-JJ
+  adherentsAjoutes: number;
+  produitsAchetes: number;
+  creeLe: string;
+  modifieLe: string;
+};

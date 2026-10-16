@@ -3,7 +3,8 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAdminUsername, getAdminVersion, getSessionSecret } from "./store";
 
-const COOKIE = "obirin_admin";
+// nom configurable (utile pour faire tourner deux instances sur la même machine sans mélanger les sessions)
+const COOKIE = process.env.SESSION_COOKIE_NAME || "obirin_admin";
 const SESSION_DAYS = 7;
 
 function sign(payload: string) {

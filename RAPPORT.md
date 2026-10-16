@@ -73,6 +73,7 @@ Le PDF ne contient aucun texte : chaque page est une image. Toutes les pages ont
 - **Se connecter** : `/admin/connexion` (ex. http://localhost:3001/admin/connexion). Session de 7 jours, 5 essais max. par 15 min.
 - **Produits** : modifier prix, variantes, images (principale, détourée, galerie), textes, bienfaits, composition, conseils, précautions, mise en page, couleur, produits associés ; masquer/afficher ; créer ; supprimer. Le site se met à jour à l'enregistrement, sans rebuild.
 - **Demandes reçues** : toutes les demandes du formulaire, avec appel et réponse WhatsApp en un clic.
+- **Adhésions** (indépendantes du site web) : « Ajouter une adhésion » (nom, prénom, date de naissance, pays, e-mails, téléphones, adresse, date d'adhésion, nombre d'adhérents ajoutés, nombre de produits achetés) et « Liste des adhésions » (recherche sans accents, filtre par pays, totaux, modification, suppression, export **CSV** pour Excel et **PDF** A4 paysage — les exports suivent le filtre en cours).
 - **Réglages & WhatsApp** : numéro WhatsApp Business (vide = boutons masqués), début des messages, changement de mot de passe.
 - **WhatsApp** : bouton « Commander sur WhatsApp » sur chaque fiche (produit, variante, prix, lien) et « Envoyer aussi sur WhatsApp » après le formulaire (nom, téléphone du visiteur, produit, message).
 - **Données** : `data/store/` (produits, réglages, compte, demandes, images envoyées). Non versionné dans Git (données personnelles et mot de passe) : **à sauvegarder séparément**. `data/products.ts` ne sert plus que de contenu initial.

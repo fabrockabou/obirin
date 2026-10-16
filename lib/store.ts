@@ -11,7 +11,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { defaultProducts } from "@/data/products";
-import type { CollectionSlug, ContactRequest, Product, SiteSettings } from "@/data/types";
+import type { Adhesion, CollectionSlug, ContactRequest, Product, SiteSettings } from "@/data/types";
 
 export const STORE_DIR = path.resolve(process.env.OBIRIN_STORE_DIR || path.join(process.cwd(), "data", "store"));
 export const UPLOAD_DIR = path.join(STORE_DIR, "uploads");
@@ -198,4 +198,39 @@ export function listRequests(limit = 200): ContactRequest[] {
 export function deleteRequest(id: string) {
   if (!/^[\w-]+$/.test(id)) return;
   fs.rmSync(path.join(REQUEST_DIR, `${id}.json`), { force: true });
+}
+
+// ─────────────────────────────── Adhésions ───────────────────────────────
+
+/** Adhésions, de la plus récente (date d'adhésion) à la plus ancienne. */
+export function getAdhesions(): Adhesion[] {
+  return [...readJSON<Adhesion[]>("adhesions.json", () => [])].sort(
+    (a, b) => b.dateAdhesion.localeCompare(a.dateAdhesion) || b.creeLe.localeCompare(a.creeLe),
+  );
+}
+
+export function getAdhesion(id: string) {
+  return getAdhesions().find((a) => a.id === id);
+}
+
+export function saveAdhesion(data: Omit<Adhesion, "id" | "creeLe" | "modifieLe">, id?: string): Adhesion {
+  const all = readJSON<Adhesion[]>("adhesions.json", () => []);
+  const now = new Date().toISOString();
+  const index = id ? all.findIndex((a) => a.id === id) : -1;
+  if (id && index < 0) throw new Error("Cette adhésion n'existe plus.");
+  const record: Adhesion =
+    index >= 0
+      ? { ...all[index], ...data, modifieLe: now }
+      : { id: `${Date.now().toString(36)}${crypto.randomBytes(3).toString("hex")}`, ...data, creeLe: now, modifieLe: now };
+  if (index >= 0) all[index] = record;
+  else all.push(record);
+  writeJSON("adhesions.json", all);
+  return record;
+}
+
+export function deleteAdhesion(id: string) {
+  writeJSON(
+    "adhesions.json",
+    readJSON<Adhesion[]>("adhesions.json", () => []).filter((a) => a.id !== id),
+  );
 }

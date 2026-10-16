@@ -4,13 +4,16 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { ImageAsset } from "@/data/types";
 import { endSession, loginThrottle, requireAdmin, startSession } from "@/lib/auth";
+import { parseAdhesion, type AdhesionErrors, type AdhesionFields } from "@/lib/adhesion-input";
 import { applyInput, parseProductInput } from "@/lib/product-input";
 import {
+  deleteAdhesion,
   deleteProduct,
   deleteRequest,
   getAllProducts,
   getProduct,
   getSettings,
+  saveAdhesion,
   saveProduct,
   saveSettings,
   setAdmin,
@@ -139,4 +142,33 @@ export async function deleteRequestAction(form: FormData) {
   await requireAdmin();
   deleteRequest(String(form.get("id") ?? ""));
   revalidatePath("/admin/demandes");
+}
+
+// ─────────────────────────────── Adhésions ───────────────────────────────
+
+export type AdhesionState = { error?: string; errors?: AdhesionErrors; values?: Partial<Record<keyof AdhesionFields, string>> };
+
+export async function saveAdhesionAction(_prev: AdhesionState, form: FormData): Promise<AdhesionState> {
+  await requireAdmin();
+  const id = String(form.get("id") ?? "") || undefined;
+  const parsed = parseAdhesion(form);
+  if ("errors" in parsed) {
+    // on renvoie la saisie pour ne rien faire retaper
+    const values = Object.fromEntries([...form.entries()].filter(([, v]) => typeof v === "string")) as AdhesionState["values"];
+    return { errors: parsed.errors, values, error: "Merci de corriger les champs indiqués." };
+  }
+  try {
+    saveAdhesion(parsed.data, id);
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Enregistrement impossible." };
+  }
+  revalidatePath("/admin/adhesions");
+  redirect(`/admin/adhesions?${id ? "modifiee" : "ajoutee"}=1`);
+}
+
+export async function deleteAdhesionAction(form: FormData) {
+  await requireAdmin();
+  deleteAdhesion(String(form.get("id") ?? ""));
+  revalidatePath("/admin/adhesions");
+  redirect("/admin/adhesions?supprimee=1");
 }
