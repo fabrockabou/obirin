@@ -200,6 +200,20 @@ await sharp(path.join(SRC, "editorial-philosophie.webp")).resize({ width: 1400, 
   console.log("emblem ok");
 }
 
+// 8. Produits Monbio (photos du site groupemonbio.com, fournies par le partenaire) -> WebP optimisé
+{
+  const src = path.join(SRC, "monbio");
+  const dest = path.join(OUT, "monbio");
+  fs.mkdirSync(dest, { recursive: true });
+  for (const f of fs.readdirSync(src).filter((x) => /\.(jpe?g|png)$/i.test(x))) {
+    await sharp(path.join(src, f)).resize({ width: 1200, height: 1200, fit: "inside", withoutEnlargement: true }).webp({ quality: 86 })
+      .toFile(path.join(dest, f.replace(/\.(jpe?g|png)$/i, ".webp")));
+  }
+  // visuel de la collection : la gamme de savons liquides
+  await sharp(path.join(src, "5.jpg")).resize({ width: 1600, withoutEnlargement: true }).webp({ quality: 84 }).toFile(path.join(OUT, "collections", "monbio.webp"));
+  console.log("monbio ok");
+}
+
 // 7. Manifest of intrinsic sizes (consumed by data/images.ts for next/image, avoids layout shift)
 {
   const manifest = {};
@@ -217,4 +231,5 @@ await sharp(path.join(SRC, "editorial-philosophie.webp")).resize({ width: 1400, 
   fs.writeFileSync(path.join(ROOT, "data", "image-manifest.json"), JSON.stringify(manifest, null, 1));
   console.log("manifest", Object.keys(manifest).length);
 }
+
 

@@ -7,6 +7,7 @@
 // imprimé sur l'emballage. Aucune information n'est inventée ; les champs absents de la source
 // sont simplement omis.
 import { cataloguePage, img } from "./images";
+import monbio from "./products-monbio.json";
 import type { Product } from "./types";
 
 const NOTE_GROSSESSE =
@@ -717,5 +718,7 @@ export const defaultProducts: Product[] = [
     tone: "ocean",
     related: ["multi-vitamines-enfants"],
   },
+  // ───────────────────────── MONBIO (groupemonbio.com) ─────────────────────────
+  // Généré par scripts/import-monbio.mjs à partir des données du site Monbio.
+  ...(monbio as unknown as Product[]),
 ];
-

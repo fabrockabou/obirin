@@ -54,6 +54,15 @@ Le PDF ne contient aucun texte : chaque page est une image. Toutes les pages ont
 - Les autres produits : extraits fidèles de leur page du catalogue (produit complet, jamais recadré).
 - Photos de collections : vos 7 portraits (`source/collections`) sont utilisés pour les 6 collections et l'univers Services.
 
+## Collection Monbio (/collections/monbio)
+- 20 produits repris du site officiel groupemonbio.com : savons liquides de Marseille, coton, disques démaquillants, papiers et sachets parfumés.
+- Noms, descriptions, formats, origines et photos : identiques au site Monbio (photos dans `source/monbio`, optimisées dans `public/images/monbio`).
+- Prix : prix public Monbio en euros × 655,957, arrondi à la centaine de FCFA. C'est la règle d'affichage du site Monbio. Les prix « pro » ne sont pas repris.
+- Fiche technique PDF Monbio : non reprise.
+- « Papiers Parfumés — Lot de 3 » est **masqué**, car la photo publiée par Monbio montre un savon. À réactiver dans /admin après avoir ajouté une bonne photo.
+- Ré-import : `node scripts/import-monbio.mjs --store` ajoute les produits manquants sans écraser ceux modifiés dans /admin.
+- Les produits Monbio apparaissent dans la boutique (filtre « Monbio »), sur l'accueil (tuile Monbio), dans la recherche, le plan du site et l'administration.
+
 ## Points à valider / éléments manquants
 1. **Chitosan** : le catalogue indique 400 mg × **60** capsules (flacon blanc) ; votre packshot montre un flacon bleu 400 mg × **100** capsules. Le site suit le catalogue et présente le flacon bleu comme « autre conditionnement, prix non communiqué ».
 2. **Savon d'olive** : votre packshot porte les mentions « 245 mm / Anion Enjoyable / 10 pétos » (celles des serviettes). Il n'est pas utilisé ; le visuel du catalogue est affiché.

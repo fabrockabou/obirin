@@ -8,7 +8,8 @@ import { servicesIntro } from "@/data/services";
 type Tile = { href: string; title: string; kicker: string; count: string; image: { src: string; alt: string }; span: string; ratio: string };
 
 const pick = (slug: string) => collections.find((c) => c.slug === slug)!;
-const tiles: Tile[] = [
+/** Calculé à chaque rendu : le nombre de références suit les modifications faites dans l'administration. */
+const buildTiles = (): Tile[] => [
   ...(["sante-feminine", "minceur-nutrition", "beaute-eclat", "soins-capillaires", "hygiene-soin-quotidien"] as const).map((slug, i) => {
     const c = pick(slug);
     const n = productsIn(slug).length;
@@ -30,9 +31,24 @@ const tiles: Tile[] = [
     span: "lg:col-span-4",
     ratio: "aspect-[3/4]",
   },
+  // Monbio : bandeau pleine largeur
+  (() => {
+    const c = pick("monbio");
+    const n = productsIn("monbio").length;
+    return {
+      href: "/collections/monbio",
+      title: c.name,
+      kicker: c.kicker,
+      count: `${n} référence${n > 1 ? "s" : ""}`,
+      image: c.image,
+      span: "lg:col-span-12",
+      ratio: "aspect-[4/3] sm:aspect-[21/8]",
+    };
+  })(),
 ];
 
 export function Universes() {
+  const tiles = buildTiles();
   return (
     <section className="relative bg-cream py-28 lg:py-40" aria-labelledby="univers-titre">
       <div className="container-luxe">

@@ -56,7 +56,7 @@ export default async function ProductPage({ params }: Props) {
     alternateName: product.packagingName,
     image: [product.image, ...product.gallery].map((im) => `${site.url}${im.src}`),
     description: product.intro ?? product.tagline,
-    brand: { "@type": "Brand", name: "Green World" },
+    brand: { "@type": "Brand", name: product.brand ?? "Green World" },
     category: collection.name,
     ...(product.price !== null && {
       offers: (product.variants ?? [{ id: "unique", price: product.price, label: product.format ?? "" }]).map((v) => ({

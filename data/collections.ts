@@ -64,6 +64,21 @@ export const collections: Collection[] = [
     tone: "olive",
   },
   {
+    slug: "monbio",
+    name: "Monbio",
+    kicker: "Savons de Marseille, coton & senteurs",
+    description:
+      "Savons liquides de Marseille, coton hydrophile pur et sachets parfumés : la gamme Monbio pour le soin du corps, l'hygiène au quotidien et le parfum de la maison.",
+    pillars: [
+      { title: "Savons", text: "de Marseille, 1 L" },
+      { title: "Coton", text: "100 % pur coton" },
+      { title: "Visage", text: "disques démaquillants" },
+      { title: "Senteurs", text: "sachets & papiers parfumés" },
+    ],
+    image: img("/images/collections/monbio.webp", "Gamme de savons liquides de Marseille Monbio", { kind: "editorial" }),
+    tone: "honey",
+  },
+  {
     slug: "autres-references",
     name: "Autres références",
     kicker: "Hors catalogue d'octobre",

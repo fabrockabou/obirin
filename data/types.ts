@@ -24,6 +24,7 @@ export type CollectionSlug =
   | "beaute-eclat"
   | "soins-capillaires"
   | "hygiene-soin-quotidien"
+  | "monbio"
   | "autres-references";
 
 export type Product = {
@@ -67,6 +68,10 @@ export type Product = {
   tone: ProductTone;
   related: string[];
   sourceNote?: string;
+  /** Marque du produit (défaut : Green World) */
+  brand?: string;
+  /** Provenance des informations, affichée en bas de la fiche (défaut : catalogue Green World) */
+  source?: string;
   /** Masqué du site (géré depuis l'administration) */
   hidden?: boolean;
   /** Date de dernière modification depuis l'administration (ISO) */
