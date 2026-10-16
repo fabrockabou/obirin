@@ -1,8 +1,15 @@
-// Renders the provisional hero film (motion design from the real packshots) and encodes it
-// for scroll scrubbing: short GOP (keyframe every 4 frames), no B-frames, faststart.
-//   node scripts/render-hero-video.mjs            -> desktop (1600x900) + mobile (720x1280) + posters
-// Replace public/videos/hero-*.mp4 with the final film shot from docs/hero-video-brief.md when available;
-// the HeroScroll component does not need to change as long as the file names stay the same.
+// Film du Hero (motion design à partir des vrais packshots), encodé pour le pilotage au scroll :
+// GOP court (image clé toutes les 4 images), sans B-frames, faststart.
+//   node scripts/render-hero-video.mjs                 -> desktop (1600x900) + mobile (720x1280) + affiches + version légère
+//   node scripts/render-hero-video.mjs --preview 0.4,0.6  -> images PNG de contrôle dans .qa/hero/ (rien n'est encodé)
+// Remplacer public/videos/hero-*.mp4 par le film définitif (docs/hero-video-brief.md) quand il existe :
+// le composant HeroScroll n'a pas besoin de changer tant que les noms de fichiers restent identiques.
+//
+// Chronologie (fraction du scroll) — synchronisée avec components/hero/hero-config.ts :
+//   0.00–0.32  ouverture : faisceaux de lumière, bokeh, logo OBIRIN
+//   0.20–0.56  révélation de Nutrition Ovarienne sur un socle de marbre cerclé d'or (texte « manifeste » à gauche)
+//   0.44–0.80  carrousel en arc : toute la gamme défile, produit central net et lumineux (texte « univers »)
+//   0.72–1.00  composition finale en podium (titre OBIRIN + boutons au-dessus)
 import fs from "node:fs";
 import path from "node:path";
 import { spawn } from "node:child_process";
@@ -20,7 +27,7 @@ const SECONDS = 10;
 const FRAMES = FPS * SECONDS;
 
 const cut = (name) => loadImage(path.join(IMG, "packshots", `${name}-detoure.webp`));
-const assets = {
+const A = {
   ovary: await cut("nutrition-ovarienne"),
   soy: await cut("soja-puissance"),
   royal: await cut("gelee-royale"),
@@ -32,7 +39,7 @@ const assets = {
   multi: await cut("multi-vitamines-enfants"),
 };
 
-// ---------- helpers ----------
+// ───────────────────────── outils ─────────────────────────
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
 const range = (t, a, b) => clamp((t - a) / (b - a));
@@ -41,43 +48,259 @@ const easeOut = (t) => 1 - Math.pow(1 - t, 3);
 function rng(seed) {
   return () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
 }
+const R = rng(11);
+const bokeh = Array.from({ length: 34 }, () => ({ x: R(), y: R(), r: 0.012 + R() * 0.045, z: 0.3 + R() * 0.9, rose: R() > 0.62, a: 0.05 + R() * 0.11, ph: R() * 6.28 }));
+const dust = Array.from({ length: 90 }, () => ({ x: R(), y: R(), z: 0.3 + R() * 0.7, s: R() }));
+const petals = Array.from({ length: 18 }, () => ({ x: R(), y: R(), z: 0.4 + R() * 0.9, rot: R() * 6.28, spin: (R() - 0.5) * 3, sway: R() * 6.28, hue: R() }));
+const sparkles = Array.from({ length: 26 }, () => ({ x: R(), y: R(), ph: R() * 6.28, s: 0.5 + R() }));
 
-const R = rng(7);
-const particles = Array.from({ length: 140 }, () => ({ x: R(), y: R(), z: 0.3 + R() * 0.7, s: R(), gold: R() > 0.55 }));
-const petals = Array.from({ length: 26 }, () => ({ x: R(), y: R(), z: 0.4 + R() * 0.9, rot: R() * Math.PI * 2, spin: (R() - 0.5) * 3, sway: R() * Math.PI * 2, hue: R() }));
-const leaves = Array.from({ length: 14 }, (_, i) => ({ side: i % 2 ? 1 : -1, y: R(), len: 0.25 + R() * 0.35, ang: (R() - 0.5) * 1.2, depth: 0.5 + R() * 0.8, tone: R() }));
+const GOLD = (ctx, x1, y1, x2, y2) => {
+  const g = ctx.createLinearGradient(x1, y1, x2, y2);
+  g.addColorStop(0, "#8f6a2c");
+  g.addColorStop(0.35, "#f4dc97");
+  g.addColorStop(0.55, "#c99b48");
+  g.addColorStop(0.8, "#f8e6ad");
+  g.addColorStop(1, "#8f6a2c");
+  return g;
+};
 
-function drawLeaf(ctx, x, y, len, ang, tone, alpha) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(ang);
-  ctx.globalAlpha = alpha;
-  const g = ctx.createLinearGradient(0, -len / 2, 0, len / 2);
-  g.addColorStop(0, `rgb(${18 + tone * 20},${70 + tone * 40},${48 + tone * 20})`);
-  g.addColorStop(1, `rgb(4,${28 + tone * 18},18)`);
+function glow(ctx, x, y, r, a, color = "255,236,200") {
+  if (a <= 0 || r <= 0) return;
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0, `rgba(${color},${a})`);
+  g.addColorStop(0.4, `rgba(${color},${a * 0.35})`);
+  g.addColorStop(1, `rgba(${color},0)`);
   ctx.fillStyle = g;
+  ctx.fillRect(x - r, y - r, r * 2, r * 2);
+}
+
+/** Faisceaux de lumière tombant du haut, légèrement mouvants. */
+function lightBeams(ctx, W, H, t, a) {
+  if (a <= 0) return;
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+  const beams = [
+    { x: 0.32, w: 0.16, tilt: -0.18, k: 1 },
+    { x: 0.55, w: 0.22, tilt: 0.08, k: 0.8 },
+    { x: 0.74, w: 0.12, tilt: 0.22, k: 0.65 },
+  ];
+  for (const [i, b] of beams.entries()) {
+    const sway = Math.sin(t * 6 + i * 1.7) * 0.03;
+    const x0 = W * (b.x + sway);
+    const g = ctx.createLinearGradient(0, 0, 0, H * 0.95);
+    g.addColorStop(0, `rgba(255,236,196,${0.13 * a * b.k})`);
+    g.addColorStop(0.55, `rgba(255,226,180,${0.05 * a * b.k})`);
+    g.addColorStop(1, "rgba(255,226,180,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.moveTo(x0 - W * b.w * 0.18, 0);
+    ctx.lineTo(x0 + W * b.w * 0.18, 0);
+    ctx.lineTo(x0 + W * (b.w * 0.5 + b.tilt * 0.4), H);
+    ctx.lineTo(x0 - W * (b.w * 0.5 - b.tilt * 0.4), H);
+    ctx.closePath();
+    ctx.filter = `blur(${Math.round(W * 0.012)}px)`;
+    ctx.fill();
+  }
+  ctx.filter = "none";
+  ctx.restore();
+}
+
+function drawBokeh(ctx, W, H, t, a, shift) {
+  if (a <= 0) return;
+  const U = Math.min(W, H);
+  for (const b of bokeh) {
+    const x = ((((b.x - shift * 0.35 * b.z + Math.sin(t * 3 + b.ph) * 0.01) % 1) + 1) % 1) * W;
+    const y = ((((b.y - t * 0.05 * b.z) % 1) + 1) % 1) * H;
+    const r = b.r * U * 2.2;
+    const tw = 0.75 + 0.25 * Math.sin(t * 9 + b.ph);
+    glow(ctx, x, y, r, b.a * a * tw, b.rose ? "236,160,190" : "236,200,130");
+  }
+}
+
+/** Socle cylindrique en marbre ivoire, liseré d'or. (cx, top) = centre de la face supérieure. */
+function pedestal(ctx, cx, top, rw, height, a, seed = 1) {
+  if (a <= 0) return;
+  const rh = rw * 0.2;
+  ctx.save();
+  ctx.globalAlpha = a;
+  // ombre portée au sol
+  const sh = ctx.createRadialGradient(cx, top + height + rh * 0.3, 0, cx, top + height + rh * 0.3, rw * 1.6);
+  sh.addColorStop(0, "rgba(0,0,0,0.55)");
+  sh.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = sh;
   ctx.beginPath();
-  ctx.moveTo(0, -len / 2);
-  ctx.bezierCurveTo(len * 0.32, -len * 0.25, len * 0.3, len * 0.25, 0, len / 2);
-  ctx.bezierCurveTo(-len * 0.3, len * 0.25, -len * 0.32, -len * 0.25, 0, -len / 2);
+  ctx.ellipse(cx, top + height + rh * 0.3, rw * 1.6, rh * 1.6, 0, 0, Math.PI * 2);
   ctx.fill();
-  ctx.strokeStyle = `rgba(160,210,170,${0.18 * alpha})`;
-  ctx.lineWidth = Math.max(1, len * 0.006);
+  // flanc
+  const side = ctx.createLinearGradient(cx - rw, 0, cx + rw, 0);
+  side.addColorStop(0, "#8c826f");
+  side.addColorStop(0.28, "#e9e0cf");
+  side.addColorStop(0.48, "#fbf7ef");
+  side.addColorStop(0.75, "#d6ccb8");
+  side.addColorStop(1, "#6f6656");
+  ctx.fillStyle = side;
   ctx.beginPath();
-  ctx.moveTo(0, -len / 2);
-  ctx.lineTo(0, len / 2);
+  ctx.moveTo(cx - rw, top);
+  ctx.lineTo(cx - rw, top + height);
+  ctx.ellipse(cx, top + height, rw, rh, 0, Math.PI, 0, true);
+  ctx.lineTo(cx + rw, top);
+  ctx.closePath();
+  ctx.fill();
+  // bandeau doré en pied
+  if (height > rh * 0.8) {
+    ctx.strokeStyle = GOLD(ctx, cx - rw, 0, cx + rw, 0);
+    ctx.lineWidth = Math.max(1.5, rw * 0.035);
+    ctx.beginPath();
+    ctx.ellipse(cx, top + height - rh * 0.25, rw * 0.995, rh, 0, 0, Math.PI);
+    ctx.stroke();
+  }
+  // face supérieure en marbre
+  const face = ctx.createRadialGradient(cx - rw * 0.25, top - rh * 0.3, 0, cx, top, rw * 1.1);
+  face.addColorStop(0, "#ffffff");
+  face.addColorStop(0.6, "#f1eadc");
+  face.addColorStop(1, "#cfc4ae");
+  ctx.fillStyle = face;
+  ctx.beginPath();
+  ctx.ellipse(cx, top, rw, rh, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // veines du marbre
+  ctx.save();
+  ctx.clip();
+  ctx.strokeStyle = "rgba(150,138,118,0.28)";
+  ctx.lineWidth = Math.max(1, rw * 0.008);
+  for (let v = 0; v < 3; v++) {
+    const o = ((seed * 37 + v * 53) % 100) / 100 - 0.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - rw, top + rh * o);
+    ctx.bezierCurveTo(cx - rw * 0.3, top - rh * (0.6 + o), cx + rw * 0.2, top + rh * (0.7 - o), cx + rw, top + rh * o * 0.5);
+    ctx.stroke();
+  }
+  ctx.restore();
+  // liseré d'or
+  ctx.strokeStyle = GOLD(ctx, cx - rw, top, cx + rw, top);
+  ctx.lineWidth = Math.max(2, rw * 0.045);
+  ctx.beginPath();
+  ctx.ellipse(cx, top, rw, rh, 0, 0, Math.PI * 2);
   ctx.stroke();
   ctx.restore();
 }
 
-function drawPetal(ctx, x, y, size, rot, hue, alpha) {
+/** Étagère de marbre (pour la rangée arrière de la composition finale). */
+function shelf(ctx, x1, x2, top, height, a) {
+  if (a <= 0) return;
+  const depth = (x2 - x1) * 0.045;
+  ctx.save();
+  ctx.globalAlpha = a;
+  const front = ctx.createLinearGradient(0, top, 0, top + height);
+  front.addColorStop(0, "#e9e0cf");
+  front.addColorStop(1, "#8a806d");
+  ctx.fillStyle = front;
+  ctx.fillRect(x1, top, x2 - x1, height);
+  const face = ctx.createLinearGradient(x1, 0, x2, 0);
+  face.addColorStop(0, "#d9cfbb");
+  face.addColorStop(0.5, "#fbf7ef");
+  face.addColorStop(1, "#d9cfbb");
+  ctx.fillStyle = face;
+  ctx.beginPath();
+  ctx.moveTo(x1 + depth, top - depth);
+  ctx.lineTo(x2 - depth, top - depth);
+  ctx.lineTo(x2, top);
+  ctx.lineTo(x1, top);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = GOLD(ctx, x1, 0, x2, 0);
+  ctx.lineWidth = Math.max(2, height * 0.08);
+  ctx.beginPath();
+  ctx.moveTo(x1, top);
+  ctx.lineTo(x2, top);
+  ctx.stroke();
+  ctx.restore();
+}
+
+/**
+ * Produit posé en (cx, base) : image nette ou floutée (profondeur de champ), ombre de contact,
+ * reflet discret, et éventuellement un reflet lumineux qui balaie l'emballage (shine ∈ [0,1]).
+ */
+const off = createCanvas(10, 10);
+function product(ctx, img, cx, base, h, { a = 1, light = 1, blur = 0, shine = -1, reflect = 0.14 } = {}) {
+  if (a <= 0.003 || h <= 2) return;
+  const w = (img.width / img.height) * h;
+  ctx.save();
+  ctx.globalAlpha = a;
+  const sh = ctx.createRadialGradient(cx, base, 0, cx, base, w * 0.6);
+  sh.addColorStop(0, "rgba(0,0,0,0.5)");
+  sh.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = sh;
+  ctx.beginPath();
+  ctx.ellipse(cx, base, w * 0.6, h * 0.045, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.filter = `${blur > 0.3 ? `blur(${blur.toFixed(1)}px) ` : ""}brightness(${(0.5 + 0.5 * light).toFixed(3)})`;
+  ctx.drawImage(img, cx - w / 2, base - h, w, h);
+  ctx.filter = "none";
+  // reflet lumineux : bande claire limitée à la silhouette du produit
+  if (shine >= 0 && shine <= 1) {
+    const ow = Math.ceil(w), oh = Math.ceil(h);
+    off.width = ow;
+    off.height = oh;
+    const o = off.getContext("2d");
+    o.clearRect(0, 0, ow, oh);
+    o.drawImage(img, 0, 0, ow, oh);
+    o.globalCompositeOperation = "source-in";
+    const bx = lerp(-ow * 0.6, ow * 1.6, shine);
+    const g = o.createLinearGradient(bx - ow * 0.35, 0, bx + ow * 0.35, oh * 0.4);
+    g.addColorStop(0, "rgba(255,255,255,0)");
+    g.addColorStop(0.5, "rgba(255,250,235,0.55)");
+    g.addColorStop(1, "rgba(255,255,255,0)");
+    o.fillStyle = g;
+    o.fillRect(0, 0, ow, oh);
+    o.globalCompositeOperation = "source-over";
+    ctx.globalCompositeOperation = "screen";
+    ctx.drawImage(off, cx - w / 2, base - h, w, h);
+    ctx.globalCompositeOperation = "source-over";
+  }
+  if (reflect > 0) {
+    ctx.globalAlpha = a * reflect * light;
+    ctx.translate(cx, base);
+    ctx.scale(1, -0.32);
+    if (blur > 0.3) ctx.filter = `blur(${(blur + 2).toFixed(1)}px)`;
+    ctx.drawImage(img, -w / 2, -h, w, h);
+    ctx.filter = "none";
+  }
+  ctx.restore();
+}
+
+function sparkle(ctx, x, y, s, a) {
+  if (a <= 0) return;
+  ctx.save();
+  ctx.globalAlpha = a;
+  ctx.globalCompositeOperation = "screen";
+  ctx.fillStyle = "#fff4d6";
+  ctx.beginPath();
+  ctx.moveTo(x, y - s);
+  ctx.quadraticCurveTo(x, y, x + s * 0.28, y);
+  ctx.quadraticCurveTo(x, y, x, y + s);
+  ctx.quadraticCurveTo(x, y, x - s * 0.28, y);
+  ctx.quadraticCurveTo(x, y, x, y - s);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(x - s * 0.7, y);
+  ctx.quadraticCurveTo(x, y, x, y - s * 0.2);
+  ctx.quadraticCurveTo(x, y, x + s * 0.7, y);
+  ctx.quadraticCurveTo(x, y, x, y + s * 0.2);
+  ctx.quadraticCurveTo(x, y, x - s * 0.7, y);
+  ctx.fill();
+  glow(ctx, x, y, s * 1.6, 0.35, "255,230,170");
+  ctx.restore();
+}
+
+function petal(ctx, x, y, size, rot, hue, a) {
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(rot);
-  ctx.globalAlpha = alpha;
+  ctx.globalAlpha = a;
   const g = ctx.createRadialGradient(0, -size * 0.2, 0, 0, 0, size);
-  g.addColorStop(0, hue > 0.5 ? "#ffd3e2" : "#f7b8cf");
-  g.addColorStop(1, hue > 0.5 ? "#d9467e" : "#c02a68");
+  g.addColorStop(0, hue > 0.5 ? "#ffd8e6" : "#f7bcd2");
+  g.addColorStop(1, hue > 0.5 ? "#d9467e" : "#b8285f");
   ctx.fillStyle = g;
   ctx.beginPath();
   ctx.ellipse(0, 0, size * 0.55, size, 0, 0, Math.PI * 2);
@@ -85,83 +308,53 @@ function drawPetal(ctx, x, y, size, rot, hue, alpha) {
   ctx.restore();
 }
 
-function drawProduct(ctx, img, cx, baseY, h, alpha, light = 1) {
-  if (alpha <= 0) return;
-  const w = (img.width / img.height) * h;
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  // contact shadow
-  const sh = ctx.createRadialGradient(cx, baseY, 0, cx, baseY, w * 0.65);
-  sh.addColorStop(0, "rgba(0,0,0,0.55)");
-  sh.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = sh;
-  ctx.beginPath();
-  ctx.ellipse(cx, baseY, w * 0.65, h * 0.05, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.filter = `brightness(${0.55 + 0.45 * light})`;
-  ctx.drawImage(img, cx - w / 2, baseY - h, w, h);
-  ctx.filter = "none";
-  // soft reflection
-  ctx.globalAlpha = alpha * 0.12 * light;
-  ctx.translate(cx, baseY);
-  ctx.scale(1, -0.35);
-  ctx.drawImage(img, -w / 2, -h, w, h);
-  ctx.restore();
-}
+// ───────────────────────── scène ─────────────────────────
+const CAROUSEL = [A.ovary, A.royal, A.soy, A.chitosan, A.slimming, A.soap, A.pads, A.zinc, A.multi];
+const WIDE = new Set([A.soap, A.pads]);
 
-function spotlight(ctx, x, y, r, a, color = "255,238,214") {
-  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-  g.addColorStop(0, `rgba(${color},${a})`);
-  g.addColorStop(0.45, `rgba(${color},${a * 0.35})`);
-  g.addColorStop(1, `rgba(${color},0)`);
-  ctx.fillStyle = g;
-  ctx.fillRect(x - r, y - r, r * 2, r * 2);
-}
-
-// ---------- scene ----------
 function renderFrame(ctx, W, H, t, portrait) {
-  const U = portrait ? W : H; // unit for sizes
-  // background: emerald almost black, slowly opening
+  const U = portrait ? W : H;
+  const k = U / 900; // échelle des détails
+
+  // fond : émeraude profond, s'ouvre doucement
   const open = ease(range(t, 0, 0.3));
-  const bg = ctx.createRadialGradient(W / 2, H * 0.55, 0, W / 2, H * 0.55, Math.max(W, H) * 0.9);
-  bg.addColorStop(0, `rgb(${lerp(6, 18, open)},${lerp(26, 62, open)},${lerp(19, 44, open)})`);
-  bg.addColorStop(1, "rgb(2,10,7)");
+  const bg = ctx.createRadialGradient(W / 2, H * 0.62, 0, W / 2, H * 0.62, Math.max(W, H) * 0.95);
+  bg.addColorStop(0, `rgb(${lerp(5, 22, open)},${lerp(22, 66, open)},${lerp(16, 48, open)})`);
+  bg.addColorStop(0.55, `rgb(${lerp(3, 9, open)},${lerp(14, 34, open)},${lerp(10, 25, open)})`);
+  bg.addColorStop(1, "rgb(1,7,5)");
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, W, H);
 
-  // camera
-  const push = ease(range(t, 0.22, 0.48)); // push-in on hero product
-  const travel = ease(range(t, 0.46, 0.76)); // lateral travel
-  const pull = ease(range(t, 0.66, 0.9)); // pull back to lineup
-
-  // background leaves (parallax)
-  for (const l of leaves) {
-    const show = range(t, 0.12, 0.3) * (1 - 0.4 * range(t, 0.9, 1));
-    const px = l.side < 0 ? W * (0.02 + 0.06 * l.depth) : W * (0.98 - 0.06 * l.depth);
-    const shift = (travel - pull * 0.5) * W * 0.25 * l.depth * -1;
-    const zoom = 1 + push * 0.35 * l.depth - pull * 0.2;
-    drawLeaf(ctx, px + shift + l.side * push * W * 0.08 * l.depth, H * (0.15 + l.y * 0.8), U * l.len * zoom, l.ang + l.side * 0.5, l.tone, 0.85 * show);
-  }
-
-  // particles (dust + gold)
-  for (const p of particles) {
-    const a = range(t, 0.02, 0.2) * (0.25 + 0.6 * p.s);
-    const x = ((p.x + t * 0.05 * p.z - travel * 0.25 * p.z) % 1 + 1) % 1;
-    const y = ((p.y - t * 0.12 * p.z) % 1 + 1) % 1;
-    ctx.fillStyle = p.gold ? `rgba(226,190,120,${a})` : `rgba(220,240,225,${a * 0.6})`;
+  // sol brillant (horizon) une fois la scène ouverte
+  const floorA = range(t, 0.18, 0.34);
+  if (floorA > 0) {
+    const fy = H * (portrait ? 0.79 : 0.74);
+    const fl = ctx.createLinearGradient(0, fy, 0, H);
+    fl.addColorStop(0, `rgba(10,42,29,${0.0})`);
+    fl.addColorStop(0.08, `rgba(18,58,40,${0.55 * floorA})`);
+    fl.addColorStop(1, `rgba(2,10,7,${0.9 * floorA})`);
+    ctx.fillStyle = fl;
+    ctx.fillRect(0, fy, W, H - fy);
+    ctx.strokeStyle = `rgba(217,195,154,${0.18 * floorA})`;
+    ctx.lineWidth = Math.max(1, k);
     ctx.beginPath();
-    ctx.arc(x * W, y * H, (0.6 + p.s * 1.8) * (U / 900) * (0.6 + p.z), 0, Math.PI * 2);
-    ctx.fill();
+    ctx.moveTo(W * 0.05, fy + H * 0.012);
+    ctx.lineTo(W * 0.95, fy + H * 0.012);
+    ctx.stroke();
   }
 
-  // ---- scene 2: le logo OBIRIN (mot-symbole gras) apparaît dans un halo ivoire (0.04 -> 0.3)
+  const travel = ease(range(t, 0.52, 0.76));
+  lightBeams(ctx, W, H, t, range(t, 0.06, 0.26) * (1 - 0.35 * range(t, 0.9, 1)));
+  drawBokeh(ctx, W, H, t, range(t, 0.04, 0.22), travel);
+
+  // ── ouverture : logo OBIRIN
   const logoIn = easeOut(range(t, 0.04, 0.16));
   const logoOut = range(t, 0.24, 0.32);
   const logoA = logoIn * (1 - logoOut);
   if (logoA > 0) {
     const size = (portrait ? W * 0.15 : H * 0.15) * (0.94 + 0.06 * logoIn + 0.08 * logoOut);
     const cy = H * 0.46 - logoOut * H * 0.06;
-    spotlight(ctx, W / 2, cy, size * 3.4, 0.18 * logoA, "246,241,231");
+    glow(ctx, W / 2, cy, size * 3.6, 0.2 * logoA, "246,232,200");
     ctx.save();
     ctx.globalAlpha = logoA;
     ctx.font = `900 ${Math.round(size)}px "Arial Black", "Segoe UI Black", Arial, sans-serif`;
@@ -170,112 +363,194 @@ function renderFrame(ctx, W, H, t, portrait) {
     if ("letterSpacing" in ctx) ctx.letterSpacing = `${Math.round(size * 0.12)}px`;
     ctx.fillStyle = "#f8f4ec";
     ctx.fillText("OBIRIN", W / 2, cy);
+    // fin filet doré sous le logo
+    const lw = size * 2.6 * logoIn;
+    ctx.fillStyle = GOLD(ctx, W / 2 - lw, 0, W / 2 + lw, 0);
+    ctx.fillRect(W / 2 - lw / 2, cy + size * 0.75, lw, Math.max(1.5, size * 0.025));
     ctx.restore();
   }
 
-  // ---- scene 3: light reveals hero product (Ovary Nutrition) and camera pushes in
+  // ── révélation : Nutrition Ovarienne sur son socle (tiers droit en paysage)
   const reveal = ease(range(t, 0.2, 0.34));
-  const heroFade = 1 - range(t, 0.5, 0.58);
-  if (reveal > 0 && heroFade > 0) {
-    const h = U * (portrait ? 0.62 : 0.58) * (1 + push * 0.45);
-    // en paysage, le produit occupe le tiers droit pour laisser la place au titre à gauche
-    const cx = (portrait ? W / 2 : W * 0.66) - travel * W * 0.35;
-    const base = H * (portrait ? 0.74 : 0.84) + push * H * 0.12;
-    // podium
-    ctx.save();
-    ctx.globalAlpha = reveal * heroFade;
-    const pg = ctx.createLinearGradient(0, base - 10, 0, base + h * 0.12);
-    pg.addColorStop(0, "rgba(236,226,206,0.55)");
-    pg.addColorStop(1, "rgba(30,50,40,0)");
-    ctx.fillStyle = pg;
+  // le produit d'ouverture glisse jusqu'à sa place au centre du carrousel, puis le carrousel prend le relais
+  const heroOut = 1 - range(t, 0.5, 0.52);
+  if (reveal > 0 && heroOut > 0) {
+    const push = ease(range(t, 0.24, 0.48));
+    const zoom = 1 + push * 0.3;
+    const m = ease(range(t, 0.42, 0.5));
+    const cx = lerp(portrait ? W / 2 : W * 0.68, W / 2, m);
+    const h = lerp(U * 0.5 * zoom, U * 0.44 * (portrait ? 1.2 : 1), m);
+    const top = lerp(H * (portrait ? 0.7 : 0.74) + push * H * 0.04, H * (portrait ? 0.74 : 0.76), m);
+    const rw = (A.ovary.width / A.ovary.height) * h * 0.78;
+    const a = reveal * heroOut;
+    glow(ctx, cx, top - h * 0.55, h * 0.95, 0.5 * a);
+    pedestal(ctx, cx, top, rw, h * lerp(0.15, 0.13, m), a, 3);
+    product(ctx, A.ovary, cx, top, h, { a, light: reveal, shine: range(t, 0.3, 0.44), reflect: 0 });
+  }
+
+  // ── carrousel en arc : toute la gamme
+  const carIn = ease(range(t, 0.47, 0.51));
+  const carOut = 1 - range(t, 0.75, 0.8);
+  if (carIn > 0 && carOut > 0) {
+    const n = CAROUSEL.length;
+    const step = portrait ? 0.82 : 0.6;
+    const phi = travel * (n - 1) * step;
+    const cx = W / 2;
+    const radius = W * (portrait ? 0.78 : 0.47);
+    const items = CAROUSEL.map((img, i) => {
+      const th = i * step - phi;
+      const z = Math.cos(th);
+      return { img, th, z, i };
+    })
+      .filter((it) => Math.abs(it.th) < 1.75)
+      .sort((p, q) => p.z - q.z);
+    for (const it of items) {
+      const depth = (it.z + 1) / 2; // 0 loin → 1 devant
+      const x = cx + Math.sin(it.th) * radius;
+      const wide = WIDE.has(it.img);
+      const s = lerp(0.36, 1, Math.pow(depth, 1.5));
+      const h = U * (wide ? 0.24 : 0.44) * s * (portrait ? 1.2 : 1);
+      const top = H * (portrait ? 0.74 : 0.76) - (1 - depth) * H * 0.07;
+      const a = carIn * carOut * clamp((1.75 - Math.abs(it.th)) / 0.45);
+      const blur = (1 - depth) * 7 * k;
+      const rw = (it.img.width / it.img.height) * h * (wide ? 0.62 : 0.78);
+      if (depth > 0.92) glow(ctx, x, top - h * 0.5, h * 0.95, 0.42 * a * (depth - 0.92) / 0.08);
+      ctx.save();
+      if (blur > 0.5) ctx.filter = `blur(${(blur * 0.6).toFixed(1)}px)`;
+      pedestal(ctx, x, top, rw, h * 0.13, a * lerp(0.55, 1, depth), it.i + 1);
+      ctx.restore();
+      const centered = clamp(1 - Math.abs(it.th) / (step * 0.5));
+      product(ctx, it.img, x, top, h, {
+        a,
+        light: lerp(0.35, 1, depth),
+        blur,
+        reflect: 0,
+        shine: centered > 0 ? 1 - centered * 0.5 - 0.25 + Math.sign(it.th) * 0.25 : -1,
+      });
+    }
+  }
+
+  // ── composition finale : rangée arrière sur étagère + trois socles + produits au sol
+  const fin = ease(range(t, 0.72, 0.86));
+  if (fin > 0) {
+    const lift = (1 - fin) * H * 0.05;
+    const L = portrait
+      ? {
+          shelf: [0.08, 0.92, 0.69, 0.018],
+          back: [
+            [A.chitosan, 0.2],
+            [A.slimming, 0.4],
+            [A.zinc, 0.6],
+            [A.multi, 0.8],
+          ],
+          backH: 0.25,
+          peds: [
+            [A.royal, 0.2, 0.86, 0.3, 0.05],
+            [A.ovary, 0.5, 0.835, 0.37, 0.09],
+            [A.soy, 0.8, 0.86, 0.31, 0.05],
+          ],
+          floor: [
+            [A.soap, 0.3, 0.965, 0.13],
+            [A.pads, 0.7, 0.965, 0.13],
+          ],
+        }
+      : {
+          shelf: [0.2, 0.8, 0.68, 0.022],
+          back: [
+            [A.chitosan, 0.27],
+            [A.slimming, 0.405],
+            [A.zinc, 0.595],
+            [A.multi, 0.73],
+          ],
+          backH: 0.25,
+          peds: [
+            [A.royal, 0.36, 0.86, 0.33, 0.06],
+            [A.ovary, 0.5, 0.83, 0.38, 0.1],
+            [A.soy, 0.64, 0.86, 0.34, 0.06],
+          ],
+          floor: [
+            [A.soap, 0.19, 0.95, 0.12],
+            [A.pads, 0.81, 0.95, 0.12],
+          ],
+        };
+    glow(ctx, W / 2, H * 0.66, Math.max(W, H) * 0.42, 0.32 * fin);
+    const [sx1, sx2, sTop, sH] = L.shelf;
+    const shelfA = ease(range(t, 0.72, 0.8));
+    shelf(ctx, W * sx1, W * sx2, H * sTop + lift, H * sH, shelfA);
+    L.back.forEach(([img, x], i) => {
+      const a = ease(range(t, 0.74 + i * 0.012, 0.84 + i * 0.012));
+      product(ctx, img, W * x, H * sTop + lift, U * L.backH, { a, light: 0.82, reflect: 0, blur: 0.8 * k });
+    });
+    L.peds.forEach(([img, x, top, h, ph], i) => {
+      const a = ease(range(t, 0.73 + i * 0.015, 0.83 + i * 0.015));
+      const hh = U * h;
+      const rw = (img.width / img.height) * hh * 0.8;
+      pedestal(ctx, W * x, H * top + lift, rw, U * ph, a, 7 + i);
+      product(ctx, img, W * x, H * top + lift, hh, { a, light: 1, reflect: 0, shine: range(t, 0.84 + i * 0.03, 0.96 + i * 0.03) });
+    });
+    L.floor.forEach(([img, x, top, h], i) => {
+      const a = ease(range(t, 0.76 + i * 0.015, 0.86 + i * 0.015));
+      product(ctx, img, W * x, H * top + lift, U * h, { a, light: 0.9, reflect: 0.16 });
+    });
+    // paillettes autour de la composition
+    for (const s of sparkles) {
+      const tw = Math.max(0, Math.sin(t * 40 + s.ph * 3));
+      const sx = W * lerp(0.15, 0.85, s.x);
+      const sy = H * lerp(0.42, 0.92, s.y);
+      sparkle(ctx, sx, sy, 7 * k * s.s, fin * Math.pow(tw, 6) * 0.9);
+    }
+  }
+
+  // poussière d'or qui monte
+  const dustA = range(t, 0.02, 0.2);
+  for (const p of dust) {
+    const x = ((((p.x + t * 0.03 * p.z - travel * 0.18 * p.z) % 1) + 1) % 1) * W;
+    const y = ((((p.y - t * 0.16 * p.z) % 1) + 1) % 1) * H;
+    ctx.fillStyle = `rgba(232,200,130,${dustA * (0.18 + 0.5 * p.s)})`;
     ctx.beginPath();
-    ctx.ellipse(cx, base + 4, h * 0.42, h * 0.07, 0, 0, Math.PI * 2);
+    ctx.arc(x, y, (0.6 + p.s * 1.6) * k * (0.6 + p.z), 0, Math.PI * 2);
     ctx.fill();
-    ctx.restore();
-    spotlight(ctx, cx, base - h * 0.55, h * 0.75, 0.55 * reveal * heroFade);
-    drawProduct(ctx, assets.ovary, cx, base, h, reveal * heroFade, reveal);
   }
 
-  // ---- scene 4: travelling latéral à travers toute la gamme (profondeurs alternées)
-  const passA = range(t, 0.44, 0.52);
-  const passOut = 1 - range(t, 0.72, 0.8);
-  if (passA > 0 && passOut > 0) {
-    const items = [
-      { img: assets.soy, d: 0.95 },
-      { img: assets.royal, d: 1.1 },
-      { img: assets.soap, d: 0.8, wide: true },
-      { img: assets.chitosan, d: 1.0 },
-      { img: assets.slimming, d: 0.9 },
-      { img: assets.pads, d: 0.85, wide: true },
-      { img: assets.zinc, d: 1.05 },
-      { img: assets.multi, d: 0.9 },
-    ];
-    const gap = portrait ? 0.5 : 0.24;
-    const span = (items.length - 1) * gap + 0.1;
-    const drawList = items.map((it, i) => ({ ...it, x: W * (i * gap + 0.6 - travel * span) })).sort((p, q) => p.d - q.d);
-    for (const it of drawList) {
-      if (it.x < -W * 0.3 || it.x > W * 1.3) continue;
-      const h = U * (it.wide ? 0.26 : 0.46) * it.d * (portrait ? 1.15 : 1);
-      const base = H * (0.8 + (it.d - 1) * 0.12);
-      spotlight(ctx, it.x, base - h * 0.5, h * 0.8, 0.3 * passA * passOut);
-      drawProduct(ctx, it.img, it.x, base, h, ease(passA) * passOut, 0.9);
-    }
-  }
-
-  // ---- scene 5: composition finale, deux rangs — recul de caméra, place laissée au titre
-  const line = ease(range(t, 0.7, 0.84));
-  if (line > 0) {
-    const set = portrait
-      ? [
-          { img: assets.chitosan, x: 0.17, h: 0.3, b: 0.73 },
-          { img: assets.slimming, x: 0.39, h: 0.3, b: 0.72 },
-          { img: assets.zinc, x: 0.61, h: 0.3, b: 0.72 },
-          { img: assets.multi, x: 0.83, h: 0.3, b: 0.73 },
-          { img: assets.royal, x: 0.22, h: 0.42, b: 0.86 },
-          { img: assets.ovary, x: 0.5, h: 0.5, b: 0.89 },
-          { img: assets.soy, x: 0.78, h: 0.43, b: 0.87 },
-          { img: assets.soap, x: 0.27, h: 0.15, b: 0.97 },
-          { img: assets.pads, x: 0.73, h: 0.15, b: 0.97 },
-        ]
-      : [
-          { img: assets.chitosan, x: 0.3, h: 0.32, b: 0.76 },
-          { img: assets.slimming, x: 0.42, h: 0.32, b: 0.75 },
-          { img: assets.zinc, x: 0.58, h: 0.32, b: 0.75 },
-          { img: assets.multi, x: 0.7, h: 0.32, b: 0.76 },
-          { img: assets.soap, x: 0.2, h: 0.17, b: 0.91 },
-          { img: assets.pads, x: 0.8, h: 0.17, b: 0.91 },
-          { img: assets.royal, x: 0.37, h: 0.43, b: 0.89 },
-          { img: assets.soy, x: 0.63, h: 0.44, b: 0.9 },
-          { img: assets.ovary, x: 0.5, h: 0.5, b: 0.93 },
-        ];
-    const lift = (1 - line) * H * 0.06 + range(t, 0.9, 1) * -H * 0.02;
-    spotlight(ctx, W / 2, H * 0.72, W * 0.5, 0.35 * line);
-    for (const [i, it] of set.entries()) {
-      const a = ease(range(t, 0.7 + i * 0.015, 0.82 + i * 0.015));
-      drawProduct(ctx, it.img, W * it.x, H * it.b + lift, U * it.h * (1 - 0.06 * pull), a, 0.95);
-    }
-  }
-
-  // petals
+  // pétales roses (pendant la révélation et le carrousel)
   for (const p of petals) {
-    const a = range(t, 0.26, 0.36) * (1 - range(t, 0.95, 1)) * 0.85;
-    if (a <= 0) continue;
-    const y = ((p.y + t * 0.6 * p.z) % 1.1) - 0.05;
-    const x = p.x + Math.sin(p.sway + t * 12) * 0.02 - travel * 0.2 * p.z;
-    drawPetal(ctx, (((x % 1) + 1) % 1) * W, y * H, (U / 900) * 9 * p.z, p.rot + t * p.spin * 6, p.hue, a * (0.4 + 0.6 * p.z));
+    const a = range(t, 0.26, 0.36) * (1 - range(t, 0.72, 0.8)) * 0.8;
+    if (a <= 0) break;
+    const y = ((p.y + t * 0.55 * p.z) % 1.1) - 0.05;
+    const x = p.x + Math.sin(p.sway + t * 12) * 0.02 - travel * 0.25 * p.z;
+    petal(ctx, ((((x % 1) + 1) % 1)) * W, y * H, 9 * k * p.z, p.rot + t * p.spin * 6, p.hue, a * (0.35 + 0.65 * p.z));
   }
 
-  // vignette + gentle darkening at the very end (title legibility)
-  const v = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.3, W / 2, H / 2, Math.max(W, H) * 0.75);
+  // vignette + assombrissement du haut à la fin (lisibilité du titre)
+  const v = ctx.createRadialGradient(W / 2, H * 0.55, Math.min(W, H) * 0.32, W / 2, H * 0.55, Math.max(W, H) * 0.78);
   v.addColorStop(0, "rgba(0,0,0,0)");
-  v.addColorStop(1, `rgba(1,8,5,${0.75})`);
+  v.addColorStop(1, "rgba(1,7,5,0.8)");
   ctx.fillStyle = v;
   ctx.fillRect(0, 0, W, H);
-  const top = ctx.createLinearGradient(0, 0, 0, H * 0.5);
-  top.addColorStop(0, `rgba(2,12,8,${0.55 * range(t, 0.78, 0.92)})`);
-  top.addColorStop(1, "rgba(2,12,8,0)");
-  ctx.fillStyle = top;
-  ctx.fillRect(0, 0, W, H * 0.5);
+  const topDark = ctx.createLinearGradient(0, 0, 0, H * 0.55);
+  topDark.addColorStop(0, `rgba(2,12,8,${0.6 * range(t, 0.76, 0.9)})`);
+  topDark.addColorStop(1, "rgba(2,12,8,0)");
+  ctx.fillStyle = topDark;
+  ctx.fillRect(0, 0, W, H * 0.55);
+}
+
+// ───────────────────────── rendu ─────────────────────────
+const preview = process.argv.indexOf("--preview");
+if (preview > 0) {
+  const times = (process.argv[preview + 1] || "0.12,0.4,0.6,0.7,0.9").split(",").map(Number);
+  const dir = path.join(ROOT, ".qa", "hero");
+  fs.mkdirSync(dir, { recursive: true });
+  for (const [label, W, H, portrait] of [["d", 1600, 900, false], ["m", 720, 1280, true]]) {
+    const canvas = createCanvas(W, H);
+    const ctx = canvas.getContext("2d");
+    for (const t of times) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      renderFrame(ctx, W, H, t, portrait);
+      fs.writeFileSync(path.join(dir, `${label}_${t}.png`), await canvas.encode("png"));
+    }
+  }
+  console.log("aperçus dans .qa/hero");
+  process.exit(0);
 }
 
 async function render(name, W, H, portrait, crf) {
@@ -287,7 +562,7 @@ async function render(name, W, H, portrait, crf) {
     "-c:v", "libx264", "-preset", "slow", "-crf", String(crf), "-pix_fmt", "yuv420p",
     "-g", "4", "-keyint_min", "4", "-bf", "0", "-movflags", "+faststart", "-an", file,
   ], { stdio: ["pipe", "ignore", "inherit"] });
-  const posters = { 0.12: "logo", 0.86: "final" };
+  const posters = { 0.12: "logo", 0.9: "final" };
   for (let f = 0; f < FRAMES; f++) {
     const t = f / (FRAMES - 1);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
