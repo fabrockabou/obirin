@@ -19,6 +19,7 @@ import {
   setAdmin,
   verifyAdmin,
 } from "@/lib/store";
+import { sendWhatsapp } from "@/lib/notify";
 import { saveUpload } from "@/lib/uploads";
 import { isValidWhatsapp, normalizeWhatsapp } from "@/lib/whatsapp";
 
@@ -171,4 +172,34 @@ export async function deleteAdhesionAction(form: FormData) {
   deleteAdhesion(String(form.get("id") ?? ""));
   revalidatePath("/admin/adhesions");
   redirect("/admin/adhesions?supprimee=1");
+}
+
+// ─────────────────────────────── Envoi automatique WhatsApp ───────────────────────────────
+
+export async function saveNotifyAction(_prev: FormState, form: FormData): Promise<FormState> {
+  await requireAdmin();
+  const mode = String(form.get("notifyMode") ?? "off");
+  const notifyMode = (["off", "callmebot", "meta"].includes(mode) ? mode : "off") as "off" | "callmebot" | "meta";
+  const rawTo = String(form.get("notifyTo") ?? "").trim();
+  const notifyTo = normalizeWhatsapp(rawTo);
+  if (rawTo && !isValidWhatsapp(notifyTo)) return { error: "Numéro destinataire invalide : indiquez l'indicatif pays (ex. +225 07 00 00 00 00)." };
+  const current = getSettings();
+  // champ laissé vide = clé existante conservée (elle n'est jamais renvoyée au navigateur)
+  const key = String(form.get("callmebotApiKey") ?? "").trim().slice(0, 80);
+  const callmebotApiKey = form.get("clearKey") === "on" ? "" : key || current.callmebotApiKey;
+  if (notifyMode === "callmebot" && !callmebotApiKey) return { error: "Indiquez la clé CallMeBot (voir les étapes ci-dessous)." };
+  saveSettings({ ...current, notifyMode, notifyTo, callmebotApiKey });
+  return {
+    ok: true,
+    message: notifyMode === "off" ? "Envoi automatique désactivé." : "Enregistré. Utilisez « Envoyer un message de test » pour vérifier la réception.",
+  };
+}
+
+export async function testNotifyAction(_prev: FormState): Promise<FormState> {
+  await requireAdmin();
+  const now = new Date().toLocaleString("fr-FR", { timeZone: "Africa/Abidjan" });
+  const result = await sendWhatsapp(`Test — site Obirin\nL'envoi automatique des demandes fonctionne (${now}).`, getSettings());
+  return result.ok
+    ? { ok: true, message: "Message de test envoyé : vérifiez votre WhatsApp (il peut mettre jusqu'à une minute)." }
+    : { error: `Échec de l'envoi : ${result.error}` };
 }

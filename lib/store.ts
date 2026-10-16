@@ -114,6 +114,9 @@ export function deleteProduct(slug: string) {
 const defaultSettings: SiteSettings = {
   whatsappNumber: "",
   whatsappGreeting: "Bonjour Obirin,",
+  notifyMode: "off",
+  notifyTo: "",
+  callmebotApiKey: "",
 };
 
 export function getSettings(): SiteSettings {
@@ -182,6 +185,15 @@ export function saveRequest(request: Omit<ContactRequest, "id">): ContactRequest
   const record = { id, ...request };
   fs.writeFileSync(path.join(REQUEST_DIR, `${id}.json`), JSON.stringify(record, null, 2), "utf8");
   return record;
+}
+
+/** Enregistre le résultat de l'envoi WhatsApp automatique sur une demande déjà sauvegardée. */
+export function markRequestNotified(id: string, result: ContactRequest["whatsapp"]) {
+  if (!/^[\w-]+$/.test(id)) return;
+  const target = path.join(REQUEST_DIR, `${id}.json`);
+  if (!fs.existsSync(target)) return;
+  const record = JSON.parse(fs.readFileSync(target, "utf8")) as ContactRequest;
+  fs.writeFileSync(target, JSON.stringify({ ...record, whatsapp: result }, null, 2), "utf8");
 }
 
 export function listRequests(limit = 200): ContactRequest[] {

@@ -112,7 +112,15 @@ export type SiteSettings = {
   whatsappNumber: string;
   /** Phrase d'accroche ajoutée en tête des messages WhatsApp pré-remplis */
   whatsappGreeting: string;
+  /** Envoi automatique des demandes sur WhatsApp : désactivé, CallMeBot (gratuit) ou API officielle Meta */
+  notifyMode: "off" | "callmebot" | "meta";
+  /** Numéro qui reçoit les demandes automatiques (chiffres, indicatif inclus). Vide = numéro WhatsApp Business ci-dessus. */
+  notifyTo: string;
+  /** Clé CallMeBot (reçue en écrivant au robot CallMeBot depuis le numéro destinataire) */
+  callmebotApiKey: string;
 };
+
+export type NotifyResult = { ok: boolean; error?: string; at: string; via?: string };
 
 export type ContactRequest = {
   id: string;
@@ -127,6 +135,8 @@ export type ContactRequest = {
   serviceNom?: string;
   message: string;
   recuLe: string;
+  /** Résultat de l'envoi automatique sur WhatsApp */
+  whatsapp?: NotifyResult;
 };
 
 /** Adhésion saisie depuis l'administration (indépendante du site public). */

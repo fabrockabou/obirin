@@ -42,6 +42,11 @@ export default function AdminRequestsPage() {
                     </button>
                   </form>
                 </div>
+                {r.whatsapp && (
+                  <p className={`mt-3 inline-block rounded-full px-3 py-1 text-xs font-semibold ${r.whatsapp.ok ? "bg-mist text-emerald" : "bg-blush text-fuchsia-600"}`}>
+                    {r.whatsapp.ok ? "✓ Envoyée automatiquement sur WhatsApp" : `✗ Non envoyée sur WhatsApp — ${r.whatsapp.error}`}
+                  </p>
+                )}
                 {r.message && <p className="mt-4 whitespace-pre-line rounded-xl bg-cream p-4 text-sm">{r.message}</p>}
                 <div className="mt-4 flex flex-wrap gap-2 text-sm">
                   {r.telephone && (

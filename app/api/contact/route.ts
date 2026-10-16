@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getProduct, saveRequest } from "@/lib/store";
+import { requestMessage, sendWhatsapp } from "@/lib/notify";
+import { getProduct, getSettings, markRequestNotified, saveRequest } from "@/lib/store";
 import { getService } from "@/data/services";
 
 export const runtime = "nodejs";
@@ -63,13 +64,21 @@ export async function POST(request: Request) {
   };
 
   // 1) la demande est toujours enregistrée (visible dans /admin/demandes)
+  let saved;
   try {
-    saveRequest(record);
+    saved = saveRequest(record);
   } catch (e) {
     console.error("[contact] échec d'enregistrement", e);
     return NextResponse.json({ ok: false, error: "Votre demande n'a pas pu être enregistrée. Merci de réessayer plus tard." }, { status: 500 });
   }
-  // 2) transmission facultative à un webhook (e-mail, CRM…) — un échec ici ne perd pas la demande
+  // 2) envoi automatique sur WhatsApp (si configuré dans /admin/reglages) — un échec ne perd pas la demande
+  const whatsapp = await sendWhatsapp(requestMessage(record), getSettings());
+  if (getSettings().notifyMode !== "off") {
+    markRequestNotified(saved.id, whatsapp);
+    if (!whatsapp.ok) console.error("[contact] envoi WhatsApp en échec :", whatsapp.error);
+  }
+
+  // 3) transmission facultative à un webhook (e-mail, CRM…) — un échec ici ne perd pas la demande
   const webhook = process.env.CONTACT_WEBHOOK_URL;
   if (webhook) {
     try {
