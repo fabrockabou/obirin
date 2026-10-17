@@ -56,7 +56,7 @@ Le PDF ne contient aucun texte : chaque page est une image. Toutes les pages ont
 
 ## Collection Monbio (/collections/monbio)
 - 20 produits repris du site officiel groupemonbio.com : savons liquides de Marseille, coton, disques démaquillants, papiers et sachets parfumés.
-- Noms, descriptions, formats, origines et photos : identiques au site Monbio (photos dans `source/monbio`, optimisées dans `public/images/monbio`).
+- Noms, descriptions, formats et photos : identiques au site Monbio. Aucune mention d'origine ni de source n'est affichée sur les fiches (photos dans `source/monbio`, optimisées dans `public/images/monbio`).
 - Prix : prix public Monbio en euros × 655,957, arrondi à la centaine de FCFA. C'est la règle d'affichage du site Monbio. Les prix « pro » ne sont pas repris.
 - Fiche technique PDF Monbio : non reprise.
 - « Papiers Parfumés — Lot de 3 » est **masqué**, car la photo publiée par Monbio montre un savon. À réactiver dans /admin après avoir ajouté une bonne photo.

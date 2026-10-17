@@ -121,7 +121,7 @@ export function ProductDetails({ product }: { product: Product }) {
         )}
       </section>
 
-      {(product.precautions || product.sourceNote || product.cataloguePage || product.source) && (
+      {(product.precautions || product.sourceNote || product.cataloguePage || product.source || !product.brand) && (
         <section className="container-luxe pb-24" aria-label="À noter">
           <div className="grid gap-8 rounded-[2rem] border border-forest/12 bg-cream/60 p-8 md:grid-cols-[auto_1fr] md:p-12">
             <span className="grid size-14 place-items-center rounded-full font-display text-2xl italic text-ivory" style={{ background: tone.accent }} aria-hidden="true">
@@ -139,6 +139,7 @@ export function ProductDetails({ product }: { product: Product }) {
                 </>
               )}
               {product.sourceNote && <p className="mt-6 text-sm text-ink-soft">{product.sourceNote}</p>}
+              {(product.source || product.cataloguePage || !product.brand) && (
               <p className="mt-6 text-sm text-ink-soft">
                 {product.source
                   ? product.source
@@ -146,6 +147,7 @@ export function ProductDetails({ product }: { product: Product }) {
                   ? `Informations et prix issus du catalogue Green World — octobre 2026, page ${product.cataloguePage}.`
                   : "Référence hors catalogue d'octobre 2026 : informations limitées au texte de l'emballage."}
               </p>
+              )}
             </div>
           </div>
         </section>

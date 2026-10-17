@@ -718,7 +718,7 @@ export const defaultProducts: Product[] = [
     tone: "ocean",
     related: ["multi-vitamines-enfants"],
   },
-  // ───────────────────────── MONBIO (groupemonbio.com) ─────────────────────────
+  // ───────────────────────── MONBIO ─────────────────────────
   // Généré par scripts/import-monbio.mjs à partir des données du site Monbio.
   ...(monbio as unknown as Product[]),
 ];

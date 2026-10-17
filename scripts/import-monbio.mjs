@@ -31,7 +31,6 @@ const products = source.map((p) => {
   const tail = m ? m[1].trim() : "";
   const intro = m ? p.description.slice(0, m.index).trim() : p.description.trim();
   const rawFormat = tail.split(/\s+—\s+|\.\s*/)[0].trim();
-  const origin = tail.includes("—") ? tail.split("—").slice(1).join("—").trim() : "";
   const firstSentence = intro.split(/(?<=\.)\s+/)[0];
   const src = `/images/monbio/${p.id}.webp`;
   const [width, height] = manifest[src];
@@ -50,8 +49,6 @@ const products = source.map((p) => {
     intro,
     benefits: [],
     ...(p.isNew ? { highlights: ["Nouveauté"] } : {}),
-    ...(origin ? { sourceNote: `Origine : ${origin.replace(/\.$/, "")}.` } : {}),
-    source: "Informations et prix : site officiel Monbio (groupemonbio.com). Prix converti en FCFA comme sur le site Monbio.",
     image: { src, alt: `${p.name} — photo Monbio`, width, height, kind: "packshot" },
     gallery: [],
     layout: "split",
