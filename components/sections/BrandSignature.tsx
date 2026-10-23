@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { img } from "@/data/images";
+import { site } from "@/data/site";
 
 const siege = img("/images/editorial/siege-cote-ivoire.webp", "Façade illuminée d'un siège entouré de jardins");
 
@@ -16,7 +17,7 @@ export function BrandSignature() {
       </div>
       <div className="container-luxe flex min-h-[90svh] flex-col items-center justify-center py-32 text-center">
         <p data-reveal="fade" className="kicker text-gold-soft">
-          Obirin Côte d&apos;Ivoire — We Care, We Share
+          Obirin Côte d&apos;Ivoire — {site.motto}
         </p>
         <h2 id="signature-titre" data-reveal="up" className="display mt-8 max-w-5xl text-[length:var(--text-display)]">
           Prenez soin de vous <em className="text-rose">aujourd&apos;hui.</em>

@@ -31,20 +31,20 @@ const buildTiles = (): Tile[] => [
     span: "lg:col-span-4",
     ratio: "aspect-[3/4]",
   },
-  // Monbio : bandeau pleine largeur
-  (() => {
-    const c = pick("monbio");
-    const n = productsIn("monbio").length;
+  // Monbio et Spiritual Help : deux grands bandeaux côte à côte
+  ...(["monbio", "spiritual-help"] as const).map((slug) => {
+    const c = pick(slug);
+    const n = productsIn(slug).length;
     return {
-      href: "/collections/monbio",
+      href: `/collections/${slug}`,
       title: c.name,
       kicker: c.kicker,
-      count: `${n} référence${n > 1 ? "s" : ""}`,
+      count: n ? `${n} référence${n > 1 ? "s" : ""}` : "Bientôt disponible",
       image: c.image,
-      span: "lg:col-span-12",
-      ratio: "aspect-[4/3] sm:aspect-[21/8]",
+      span: "lg:col-span-6",
+      ratio: "aspect-[4/3] lg:aspect-[16/10]",
     };
-  })(),
+  }),
 ];
 
 export function Universes() {
@@ -60,7 +60,7 @@ export function Universes() {
             </h2>
           </div>
           <p data-reveal="up" className="max-w-sm text-ink-soft">
-            Six univers pour prendre soin de soi à chaque étape de la vie : du soin intime au rituel beauté, jusqu&apos;aux rendez-vous bien-être.
+            Nos univers pour prendre soin de soi à chaque étape de la vie : du soin intime au rituel beauté, jusqu&apos;au bien-être intérieur.
           </p>
         </div>
 

@@ -170,6 +170,10 @@ export function Header({ searchIndex }: { searchIndex: SearchItem[] }) {
                 <path d="M20 20l-3.5-3.5" />
               </svg>
             </button>
+            <Link href="/adherer" className="btn btn-primary hidden min-h-11 whitespace-nowrap px-5 py-2.5 lg:inline-flex">
+              <span className="2xl:hidden">Adhérer</span>
+              <span className="hidden 2xl:inline">Adhérer à Green World</span>
+            </Link>
             <Link href="/contact" className={`btn hidden min-h-11 px-5 py-2.5 md:inline-flex ${light ? "btn-ghost-light" : "btn-ghost-dark"}`}>
               Contact
             </Link>

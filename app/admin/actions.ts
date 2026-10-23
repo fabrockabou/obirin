@@ -8,6 +8,7 @@ import { parseAdhesion, type AdhesionErrors, type AdhesionFields } from "@/lib/a
 import { applyInput, parseProductInput } from "@/lib/product-input";
 import {
   deleteAdhesion,
+  deleteInscription,
   deleteProduct,
   deleteRequest,
   getAllProducts,
@@ -143,6 +144,12 @@ export async function deleteRequestAction(form: FormData) {
   await requireAdmin();
   deleteRequest(String(form.get("id") ?? ""));
   revalidatePath("/admin/demandes");
+}
+
+export async function deleteInscriptionAction(form: FormData) {
+  await requireAdmin();
+  deleteInscription(String(form.get("id") ?? ""));
+  revalidatePath("/admin/inscriptions");
 }
 
 // ─────────────────────────────── Adhésions ───────────────────────────────

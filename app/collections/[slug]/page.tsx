@@ -60,7 +60,7 @@ export default async function CollectionPage({ params }: Props) {
             {collection.description}
           </p>
           <p className="mt-10 text-sm text-ivory/60">
-            {list.length} référence{list.length > 1 ? "s" : ""}
+            {list.length ? `${list.length} référence${list.length > 1 ? "s" : ""}` : "Bientôt disponible"}
           </p>
         </div>
       </section>
@@ -106,6 +106,19 @@ export default async function CollectionPage({ params }: Props) {
                 ))}
               </div>
             )}
+          </div>
+        </section>
+      )}
+
+      {!featured && (
+        <section className="bg-ivory py-24 lg:py-32">
+          <div className="container-luxe max-w-2xl text-center">
+            <p className="kicker text-fuchsia">Bientôt disponible</p>
+            <p className="display mt-6 text-[length:var(--text-subtitle)] text-forest">Les produits de cette collection arrivent prochainement.</p>
+            <p className="mt-6 text-ink-soft">Pour être informé(e) de leur disponibilité, écrivez-nous.</p>
+            <div className="mt-10">
+              <ArrowLink href="/contact">Nous contacter</ArrowLink>
+            </div>
           </div>
         </section>
       )}

@@ -25,6 +25,7 @@ export type CollectionSlug =
   | "soins-capillaires"
   | "hygiene-soin-quotidien"
   | "monbio"
+  | "spiritual-help"
   | "autres-references";
 
 export type Product = {
@@ -163,4 +164,20 @@ export type Adhesion = {
   produitsAchetes: number;
   creeLe: string;
   modifieLe: string;
+};
+
+/** Demande d'adhésion envoyée depuis la page publique « Adhérer à Green World ». */
+export type InscriptionAdhesion = {
+  id: string;
+  nom: string;
+  prenom: string;
+  /** Produits cochés par le visiteur (adresse + nom au moment de la demande) */
+  produits: { slug: string; name: string }[];
+  email: string;
+  telephone: string;
+  whatsapp?: string;
+  adresse: string;
+  recuLe: string;
+  /** Résultat de l'envoi WhatsApp automatique, si activé */
+  notification?: NotifyResult;
 };

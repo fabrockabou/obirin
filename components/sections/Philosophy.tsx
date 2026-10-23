@@ -88,8 +88,8 @@ export function Philosophy() {
               <defs>
                 <path id="cercle-philosophie" d="M100,100 m-92,0 a92,92 0 1,1 184,0 a92,92 0 1,1 -184,0" />
               </defs>
-              <text fontSize="6.2" letterSpacing="3.2" fill="currentColor" className="font-sans uppercase" style={{ fontWeight: 600 }}>
-                <textPath href="#cercle-philosophie">Se connaître · Se préserver · S&apos;épanouir · We Care, We Share ·</textPath>
+              <text fontSize="6.2" letterSpacing="2.6" fill="currentColor" className="font-sans uppercase" style={{ fontWeight: 600 }}>
+                <textPath href="#cercle-philosophie">Se connaître · Se préserver · S&apos;épanouir · Beauté · Bien-être · Spiritualité ·</textPath>
               </text>
             </svg>
             <div className="absolute inset-0 rounded-full border border-gold/70 p-3">

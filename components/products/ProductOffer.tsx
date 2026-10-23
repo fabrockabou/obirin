@@ -60,6 +60,11 @@ export function ProductOffer({ product, whatsapp, light = false }: { product: Pr
         )}
       </div>
 
+      <p className={`mt-5 flex max-w-md items-start gap-3 rounded-2xl border px-4 py-3 text-sm ${light ? "border-ivory/20 text-ivory/85" : "border-forest/15 bg-cream/60 text-ink"}`}>
+        <span aria-hidden="true" className="mt-px text-base leading-none">🚚</span>
+        <span>{site.deliveryNote}</span>
+      </p>
+
       {whatsapp?.whatsappNumber ? (
         <>
           {/* La demande part directement sur WhatsApp, depuis le numéro du visiteur ; le clic est enregistré dans l'administration. */}

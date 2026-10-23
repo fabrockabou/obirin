@@ -88,3 +88,14 @@ Le PDF ne contient aucun texte : chaque page est une image. Toutes les pages ont
 - **WhatsApp** : bouton « Commander sur WhatsApp » sur chaque fiche (produit, variante, prix, lien) et « Envoyer aussi sur WhatsApp » après le formulaire (nom, téléphone du visiteur, produit, message).
 - **Données** : `data/store/` (produits, réglages, compte, demandes, images envoyées). Non versionné dans Git (données personnelles et mot de passe) : **à sauvegarder séparément**. `data/products.ts` ne sert plus que de contenu initial.
 - **Hébergement** : il faut un serveur Node avec disque persistant (VPS, Railway/Render avec volume…). Un hébergement sans disque (Vercel) ne conserverait pas les modifications.
+
+## Adhérer à Green World (/adherer) et « Adhésions du site »
+- Page publique avec formulaire : nom, prénom, produits qui intéressent (liste à cocher de tous les produits, avec recherche), e-mail, téléphone, WhatsApp (optionnel), adresse.
+- Chaque demande est enregistrée dans `data/store/inscriptions.json`. Elle est consultable dans /admin → **Adhésions du site**, avec appel, réponse WhatsApp, e-mail, suppression et export CSV.
+- Comme pour le contact : WhatsApp s'ouvre avec le message prêt, et l'envoi automatique est fait si activé dans Réglages.
+- Accès : bouton « Adhérer » dans l'en-tête, et « Adhérer à Green World » dans le menu mobile.
+
+## Autres ajouts
+- Slogan : « Beauté – Bien-être – Spiritualité » (Hero, pied de page, Notre marque, titre du site).
+- Fiche produit : mention de livraison sous le prix (texte modifiable dans `data/site.ts`, `deliveryNote`).
+- Collection **Spiritual Help** : créée vide, avec le message « Bientôt disponible ». Ajoutez-y des produits depuis /admin → Produits → Nouveau produit → Univers « Spiritual Help ». Le visuel est décoratif ; remplacez-le si vous avez une photo.

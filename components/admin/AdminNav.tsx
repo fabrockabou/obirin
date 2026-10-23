@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const items: { href: string; label: string; match: (p: string) => boolean; group?: string }[] = [
   { href: "/admin/produits", label: "Produits", match: (p) => p.startsWith("/admin/produits") },
   { href: "/admin/demandes", label: "Demandes reçues", match: (p) => p.startsWith("/admin/demandes") },
+  { href: "/admin/inscriptions", label: "Adhésions du site", match: (p) => p.startsWith("/admin/inscriptions") },
   { href: "/admin/adhesions/ajouter", label: "Ajouter une adhésion", match: (p) => p === "/admin/adhesions/ajouter", group: "Adhésions" },
   {
     href: "/admin/adhesions",

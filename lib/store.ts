@@ -5,13 +5,14 @@
 //   settings.json  — réglages (numéro WhatsApp…)
 //   admin.json     — identifiant + empreinte du mot de passe administrateur
 //   requests/      — demandes envoyées par le formulaire de contact
+//   inscriptions.json — demandes d'adhésion envoyées depuis la page « Adhérer à Green World »
 //   uploads/       — images envoyées depuis l'administration (servies par /media/…)
 // Ce dossier doit être sur un disque persistant et sauvegardé : il n'est pas versionné dans Git.
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { defaultProducts } from "@/data/products";
-import type { Adhesion, CollectionSlug, ContactRequest, Product, SiteSettings } from "@/data/types";
+import type { Adhesion, CollectionSlug, ContactRequest, InscriptionAdhesion, NotifyResult, Product, SiteSettings } from "@/data/types";
 
 export const STORE_DIR = path.resolve(process.env.OBIRIN_STORE_DIR || path.join(process.cwd(), "data", "store"));
 export const UPLOAD_DIR = path.join(STORE_DIR, "uploads");
@@ -244,5 +245,34 @@ export function deleteAdhesion(id: string) {
   writeJSON(
     "adhesions.json",
     readJSON<Adhesion[]>("adhesions.json", () => []).filter((a) => a.id !== id),
+  );
+}
+
+// ─────────────────────────────── Demandes d'adhésion (site public) ───────────────────────────────
+
+/** Demandes d'adhésion envoyées depuis /adherer, de la plus récente à la plus ancienne. */
+export function getInscriptions(): InscriptionAdhesion[] {
+  return [...readJSON<InscriptionAdhesion[]>("inscriptions.json", () => [])].sort((a, b) => b.recuLe.localeCompare(a.recuLe));
+}
+
+export function saveInscription(data: Omit<InscriptionAdhesion, "id">): InscriptionAdhesion {
+  const all = readJSON<InscriptionAdhesion[]>("inscriptions.json", () => []);
+  const record: InscriptionAdhesion = { id: `${Date.now().toString(36)}${crypto.randomBytes(3).toString("hex")}`, ...data };
+  writeJSON("inscriptions.json", [...all, record]);
+  return record;
+}
+
+export function markInscriptionNotified(id: string, result: NotifyResult) {
+  const all = readJSON<InscriptionAdhesion[]>("inscriptions.json", () => []);
+  writeJSON(
+    "inscriptions.json",
+    all.map((r) => (r.id === id ? { ...r, notification: result } : r)),
+  );
+}
+
+export function deleteInscription(id: string) {
+  writeJSON(
+    "inscriptions.json",
+    readJSON<InscriptionAdhesion[]>("inscriptions.json", () => []).filter((r) => r.id !== id),
   );
 }

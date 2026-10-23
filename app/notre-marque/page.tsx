@@ -8,7 +8,7 @@ import { img } from "@/data/images";
 export const metadata: Metadata = {
   title: "Notre marque",
   description:
-    "Obirin Côte d'Ivoire — Santé, bien-être, beauté. We Care, We Share : une approche naturelle et globale pour la santé et le bien-être des femmes.",
+    "Obirin Côte d'Ivoire — Beauté, bien-être, spiritualité : une approche naturelle et globale pour la santé et le bien-être des femmes.",
   alternates: { canonical: "/notre-marque" },
 };
 
@@ -37,9 +37,9 @@ export default function BrandPage() {
         <Breadcrumb items={[{ label: "Notre marque" }]} />
         <div className="mt-14 grid items-end gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <Kicker className="text-fuchsia">Santé • Bien-être • Beauté</Kicker>
+            <Kicker className="text-fuchsia">Obirin Côte d&apos;Ivoire</Kicker>
             <h1 data-reveal="up" className="display mt-8 text-[length:var(--text-display)] text-forest">
-              We Care, <em className="text-fuchsia">We Share</em>
+              Beauté, Bien-être, <em className="text-fuchsia">Spiritualité</em>
             </h1>
           </div>
           <div className="lg:col-span-4 lg:col-start-9" data-reveal="up">

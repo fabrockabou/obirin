@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { getGsap, prefersReducedMotion } from "@/lib/gsap";
 import { heroSources, heroSequence, type HeroMode } from "./hero-config";
+import { site } from "@/data/site";
 
 /**
  * Hero cinématique piloté par le scroll.
@@ -213,9 +214,8 @@ export function HeroScroll() {
           </div>
 
           <div data-seq="signature" className="mx-auto max-w-4xl pb-[16vh] text-center js-motion:invisible js-motion:absolute js-motion:inset-x-0 js-motion:top-[13%] js-motion:pb-0">
-            <p className="kicker text-gold-soft">Santé • Bien-être • Beauté</p>
             <h1 className="display mt-4 text-[clamp(3.2rem,10vw,9rem)] tracking-[0.12em] text-ivory font-sans font-extrabold">OBIRIN</h1>
-            <p className="mt-3 font-display text-[clamp(1.4rem,2.6vw,2.2rem)] italic text-rose">We Care, We Share</p>
+            <p className="mt-3 font-display text-[clamp(1.4rem,2.6vw,2.2rem)] italic text-rose">{site.motto}</p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link href="/collections" className="btn btn-primary">
                 Explorer nos collections <span className="btn-arrow" aria-hidden="true">→</span>
