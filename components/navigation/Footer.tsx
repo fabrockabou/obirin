@@ -77,7 +77,7 @@ export function Footer() {
         <p>
           Ce site a été conçu par{" "}
           <a href="https://opulenx.com" target="_blank" rel="noopener noreferrer" className="link-underline font-semibold text-ivory/80 hover:text-ivory">
-            Brock
+            Opulenx
           </a>
         </p>
       </div>
