@@ -118,6 +118,12 @@ const defaultSettings: SiteSettings = {
   notifyMode: "off",
   notifyTo: "",
   callmebotApiKey: "",
+  seoTitle: "",
+  seoSiteName: "",
+  seoDescription: "",
+  seoKeywords: "",
+  seoImage: "",
+  seoNoIndex: false,
 };
 
 export function getSettings(): SiteSettings {

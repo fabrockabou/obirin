@@ -111,6 +111,24 @@ export async function deleteProductAction(form: FormData) {
 
 // ─────────────────────────────── Réglages ───────────────────────────────
 
+export async function saveSeoAction(_prev: FormState, form: FormData): Promise<FormState> {
+  await requireAdmin();
+  const text = (k: string, max: number) => String(form.get(k) ?? "").trim().replace(/\s+/g, " ").slice(0, max);
+  const seoImage = text("seoImage", 300);
+  if (seoImage && !/^(https?:\/\/|\/)/.test(seoImage)) return { error: "L'image de partage doit commencer par / ou https://." };
+  saveSettings({
+    ...getSettings(),
+    seoTitle: text("seoTitle", 120),
+    seoSiteName: text("seoSiteName", 60),
+    seoDescription: text("seoDescription", 320),
+    seoKeywords: text("seoKeywords", 400),
+    seoImage,
+    seoNoIndex: form.get("seoNoIndex") === "on",
+  });
+  refreshSite();
+  return { ok: true, message: "SEO enregistré. Les balises du site sont à jour." };
+}
+
 export async function saveSettingsAction(_prev: FormState, form: FormData): Promise<FormState> {
   await requireAdmin();
   const rawNumber = String(form.get("whatsappNumber") ?? "").trim();

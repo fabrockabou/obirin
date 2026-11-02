@@ -14,6 +14,7 @@ const items: { href: string; label: string; match: (p: string) => boolean; group
     match: (p) => p.startsWith("/admin/adhesions") && p !== "/admin/adhesions/ajouter",
     group: "Adhésions",
   },
+  { href: "/admin/seo", label: "SEO & méta", match: (p) => p.startsWith("/admin/seo") },
   { href: "/admin/reglages", label: "Réglages & WhatsApp", match: (p) => p.startsWith("/admin/reglages") },
 ];
 

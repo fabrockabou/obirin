@@ -11,12 +11,16 @@ import { ProductSelection } from "@/components/sections/ProductSelection";
 import { ServicesHighlight } from "@/components/sections/ServicesHighlight";
 import { Universes } from "@/components/sections/Universes";
 import { site } from "@/data/site";
+import { getSettings } from "@/lib/store";
 
-export const metadata: Metadata = {
-  title: { absolute: site.fullName },
-  description: site.description,
-  alternates: { canonical: "/" },
-};
+export function generateMetadata(): Metadata {
+  const s = getSettings();
+  return {
+    title: { absolute: s.seoTitle || site.fullName },
+    description: s.seoDescription || site.description,
+    alternates: { canonical: "/" },
+  };
+}
 
 export default function HomePage() {
   const jsonLd = {

@@ -124,6 +124,18 @@ export type SiteSettings = {
   notifyTo: string;
   /** Clé CallMeBot (reçue en écrivant au robot CallMeBot depuis le numéro destinataire) */
   callmebotApiKey: string;
+  /** SEO : titre de la page d'accueil et titre par défaut (vide = valeur du site) */
+  seoTitle: string;
+  /** SEO : nom ajouté aux titres des autres pages (vide = « Obirin ») */
+  seoSiteName: string;
+  /** SEO : meta description par défaut */
+  seoDescription: string;
+  /** SEO : mots-clés séparés par des virgules */
+  seoKeywords: string;
+  /** SEO : image de partage (Open Graph), chemin ou URL */
+  seoImage: string;
+  /** SEO : masquer le site des moteurs de recherche */
+  seoNoIndex: boolean;
 };
 
 export type NotifyResult = { ok: boolean; error?: string; at: string; via?: string };

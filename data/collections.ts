@@ -11,7 +11,7 @@ export const collections: Collection[] = [
     kicker: "Santé & équilibre féminin",
     description:
       "Un chapitre consacré aux besoins essentiels de la femme, à chaque étape de sa vie. Se connaître, s'écouter, prendre soin de soi.",
-    quote: "Une approche naturelle et globale pour la santé et le bien-être des femmes.",
+    quote: "Une approche naturelle et globale pour la santé et le bien-être de tous !",
     pillars: [
       { title: "Seins", text: "Confort & attention" },
       { title: "Équilibre féminin", text: "Harmonie au quotidien" },

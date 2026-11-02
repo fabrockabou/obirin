@@ -19,19 +19,23 @@ const cormorant = Cormorant_Garamond({
 });
 const manrope = Manrope({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], variable: "--font-manrope", display: "swap" });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  title: { default: `${site.fullName}`, template: `%s — ${site.name}` },
-  description: site.description,
-  openGraph: {
-    type: "website",
-    locale: site.locale,
-    siteName: site.name,
-    images: [{ url: "/videos/hero-desktop-poster-final.webp", width: 1600, height: 900, alt: "Produits Obirin" }],
-  },
-  twitter: { card: "summary_large_image" },
-  alternates: { canonical: "/" },
-};
+export function generateMetadata(): Metadata {
+  const s = getSettings();
+  const siteName = s.seoSiteName || site.name;
+  const image = s.seoImage
+    ? { url: s.seoImage, alt: siteName }
+    : { url: "/videos/hero-desktop-poster-final.webp", width: 1600, height: 900, alt: "Produits Obirin" };
+  return {
+    metadataBase: new URL(site.url),
+    title: { default: s.seoTitle || site.fullName, template: `%s — ${siteName}` },
+    description: s.seoDescription || site.description,
+    keywords: s.seoKeywords ? s.seoKeywords.split(",").map((k) => k.trim()).filter(Boolean) : undefined,
+    robots: s.seoNoIndex ? { index: false, follow: false } : undefined,
+    openGraph: { type: "website", locale: site.locale, siteName, images: [image] },
+    twitter: { card: "summary_large_image" },
+    alternates: { canonical: "/" },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#03130d",

@@ -10,7 +10,7 @@ const portrait = img("/images/editorial/philosophie-portrait.webp", "Femme souri
 
 // Textes : catalogue pages 2 et 22.
 // Le manifeste est découpé en mots ; les mots marqués d'un * sont mis en valeur (italique rose).
-const manifesto = "Une approche *naturelle et globale pour la santé et le *bien-être des femmes.";
+const manifesto = "Une approche *naturelle et globale pour la santé et le *bien-être de tous !";
 const words = manifesto.split(" ").map((w) => ({ text: w.replace("*", ""), accent: w.startsWith("*") }));
 
 const pillars = [
