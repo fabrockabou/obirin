@@ -23,7 +23,6 @@ export const mainNav: NavItem[] = [
   { label: "Beauté & Éclat", href: "/collections/beaute-eclat" },
   { label: "Santé féminine", href: "/collections/sante-feminine" },
   { label: "Minceur & Nutrition", href: "/collections/minceur-nutrition" },
-  { label: "Bien-être", href: "/services" },
   { label: "Notre marque", href: "/notre-marque" },
   { label: "Adhérer à Green World", href: "/adherer" },
   { label: "Contact", href: "/contact" },

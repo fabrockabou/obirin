@@ -139,14 +139,6 @@ export default async function CollectionPage({ params }: Props) {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href="/services" className="group flex items-center justify-between gap-6 py-6">
-                <span className="font-display text-[clamp(1.8rem,3.5vw,3rem)] leading-none text-forest transition-[color,transform] duration-500 group-hover:translate-x-3 group-hover:text-fuchsia">
-                  Services bien-être
-                </span>
-                <span className="hidden text-sm text-ink-soft sm:block">Sur rendez-vous</span>
-              </Link>
-            </li>
           </ul>
           <div className="mt-12">
             <ArrowLink href="/contact">Une question ? Écrivez-nous</ArrowLink>

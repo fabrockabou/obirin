@@ -16,7 +16,6 @@ const desktopNav = [
   { label: "Santé féminine", href: "/collections/sante-feminine" },
   { label: "Beauté & Éclat", href: "/collections/beaute-eclat" },
   { label: "Minceur & Nutrition", href: "/collections/minceur-nutrition" },
-  { label: "Bien-être", href: "/services" },
   { label: "Notre marque", href: "/notre-marque" },
 ];
 
@@ -137,15 +136,11 @@ export function Header({ searchIndex }: { searchIndex: SearchItem[] }) {
                         <span className="mt-1 block text-[0.68rem] font-medium normal-case tracking-normal text-ink-soft">{c.kicker}</span>
                       </Link>
                     ))}
-                    <Link href="/services" className="rounded-xl px-4 py-3 hover:bg-cream">
-                      <span className="block text-[0.72rem]">Services bien-être</span>
-                      <span className="mt-1 block text-[0.68rem] font-medium normal-case tracking-normal text-ink-soft">Sur rendez-vous</span>
-                    </Link>
                   </div>
                 </div>
               </li>
               {desktopNav.map((item) => (
-                <li key={item.href} className={item.href === "/notre-marque" || item.href === "/services" ? "hidden 2xl:block" : undefined}>
+                <li key={item.href} className={item.href === "/notre-marque" ? "hidden 2xl:block" : undefined}>
                   <Link
                     href={item.href}
                     aria-current={isActive(item.href) ? "page" : undefined}

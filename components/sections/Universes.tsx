@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Kicker } from "@/components/ui/primitives";
 import { collections } from "@/data/collections";
 import { productsIn } from "@/lib/store";
-import { servicesIntro } from "@/data/services";
 
 type Tile = { href: string; title: string; kicker: string; count: string; image: { src: string; alt: string }; span: string; ratio: string };
 
@@ -17,20 +16,11 @@ const buildTiles = (): Tile[] => [
       { span: "lg:col-span-7 lg:row-span-2", ratio: "aspect-[4/5] lg:aspect-auto lg:h-full" },
       { span: "lg:col-span-5", ratio: "aspect-[4/3]" },
       { span: "lg:col-span-5", ratio: "aspect-[4/3]" },
-      { span: "lg:col-span-4", ratio: "aspect-[3/4]" },
-      { span: "lg:col-span-4", ratio: "aspect-[3/4]" },
+      { span: "lg:col-span-6", ratio: "aspect-[4/3]" },
+      { span: "lg:col-span-6", ratio: "aspect-[4/3]" },
     ][i];
     return { href: `/collections/${slug}`, title: c.name, kicker: c.kicker, count: `${n} référence${n > 1 ? "s" : ""}`, image: c.image, ...layout };
   }),
-  {
-    href: "/services",
-    title: "Services bien-être",
-    kicker: "Sur rendez-vous",
-    count: "2 prestations",
-    image: servicesIntro.collectionImage,
-    span: "lg:col-span-4",
-    ratio: "aspect-[3/4]",
-  },
   // Monbio et Spiritual Help : deux grands bandeaux côte à côte
   ...(["monbio", "spiritual-help"] as const).map((slug) => {
     const c = pick(slug);

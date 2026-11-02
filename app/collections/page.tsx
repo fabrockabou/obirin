@@ -5,7 +5,6 @@ import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Kicker } from "@/components/ui/primitives";
 import { collections } from "@/data/collections";
 import { productsIn } from "@/lib/store";
-import { servicesIntro } from "@/data/services";
 import { formatFcfa } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -78,14 +77,6 @@ export default function CollectionsPage() {
           );
         })}
 
-        <Link href="/services" data-reveal="up" className="group relative block overflow-hidden rounded-[2rem] bg-forest text-ivory">
-          <Image src={servicesIntro.collectionImage.src} alt={servicesIntro.collectionImage.alt} fill sizes="100vw" className="object-cover opacity-40 transition-transform duration-[1.6s] group-hover:scale-105" />
-          <div className="relative p-8 sm:p-12 lg:p-16">
-            <Kicker className="text-gold-soft">Services bien-être</Kicker>
-            <p className="display mt-6 max-w-2xl text-[length:var(--text-subtitle)]">{servicesIntro.signature}</p>
-            <p className="mt-6 text-ivory/75">Rendez-vous de bien-être et bain ionique des pieds — sur rendez-vous au siège Obirin.</p>
-          </div>
-        </Link>
       </section>
     </main>
   );

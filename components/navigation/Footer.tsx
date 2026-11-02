@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { LogoFull } from "@/components/brand/Logo";
 import { collections } from "@/data/collections";
-import { services } from "@/data/services";
 import { site } from "@/data/site";
 
 export function Footer() {
@@ -29,24 +28,6 @@ export function Footer() {
               <li key={c.slug}>
                 <Link href={`/collections/${c.slug}`} className="link-underline hover:text-ivory">
                   {c.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <nav aria-label="Services">
-          <p className="kicker text-gold-soft">Bien-être</p>
-          <ul className="mt-6 space-y-3">
-            <li>
-              <Link href="/services" className="link-underline hover:text-ivory">
-                Nos services bien-être
-              </Link>
-            </li>
-            {services.map((s) => (
-              <li key={s.slug}>
-                <Link href={`/services/${s.slug}`} className="link-underline hover:text-ivory">
-                  {s.name}
                 </Link>
               </li>
             ))}

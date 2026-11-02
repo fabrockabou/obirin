@@ -98,11 +98,6 @@ export default function BrandPage() {
               Nos trois piliers. Nos conseillers en santé naturelle vous accompagnent pour mieux vous connaître et adopter
               de meilleures habitudes de vie, pour les femmes, les hommes et les enfants.
             </p>
-            <div className="mt-10">
-              <ArrowLink href="/services" light>
-                Découvrir nos services bien-être
-              </ArrowLink>
-            </div>
           </div>
         </div>
       </section>

@@ -8,7 +8,6 @@ import { getProduct } from "@/lib/store";
 import type { Product } from "@/data/types";
 import { Philosophy } from "@/components/sections/Philosophy";
 import { ProductSelection } from "@/components/sections/ProductSelection";
-import { ServicesHighlight } from "@/components/sections/ServicesHighlight";
 import { Universes } from "@/components/sections/Universes";
 import { site } from "@/data/site";
 import { getSettings } from "@/lib/store";
@@ -39,7 +38,6 @@ export default function HomePage() {
       <Universes />
       <ProductSelection />
       <CareRitual products={ritualSlugs.map((s) => getProduct(s)).filter((p): p is Product => Boolean(p))} />
-      <ServicesHighlight />
       <BrandSignature />
     </main>
   );
