@@ -14,6 +14,7 @@ export default function AdminSeoPage() {
         <p className="mt-2 text-ink-soft">Titre, description, mots-clés et image de partage du site.</p>
       </div>
       <SeoForm
+        favicon={s.seoFavicon}
         initial={{ title: s.seoTitle, siteName: s.seoSiteName, description: s.seoDescription, keywords: s.seoKeywords, image: s.seoImage, noIndex: s.seoNoIndex }}
         defaults={{ title: site.fullName, siteName: site.name, description: site.description }}
       />

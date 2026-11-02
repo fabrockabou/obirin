@@ -6,7 +6,7 @@ import { adminCard, adminHint, adminInput, adminLabel } from "./ui";
 
 type Values = { title: string; siteName: string; description: string; keywords: string; image: string; noIndex: boolean };
 
-export function SeoForm({ initial, defaults }: { initial: Values; defaults: { title: string; siteName: string; description: string } }) {
+export function SeoForm({ initial, favicon, defaults }: { initial: Values; favicon: string; defaults: { title: string; siteName: string; description: string } }) {
   const [state, action, pending] = useActionState<FormState, FormData>(saveSeoAction, {});
   const [v, setV] = useState(initial);
   const set = (k: keyof Values) => (e: { target: { value: string } }) => setV((p) => ({ ...p, [k]: e.target.value }));
@@ -43,6 +43,20 @@ export function SeoForm({ initial, defaults }: { initial: Values; defaults: { ti
           <label htmlFor="seoImage" className={adminLabel}>Image de partage (réseaux sociaux)</label>
           <input id="seoImage" name="seoImage" value={v.image} onChange={set("image")} maxLength={300} placeholder="/videos/hero-desktop-poster-final.webp" className={adminInput} />
           <p className={adminHint}>Chemin du site (/images/…) ou adresse https://. Format conseillé : 1200 × 630.</p>
+        </div>
+        <div>
+          <label htmlFor="seoFavicon" className={adminLabel}>Favicon (icône de l&apos;onglet)</label>
+          <div className="flex items-center gap-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={favicon || "/icon.svg"} alt="Favicon actuelle" width={48} height={48} className="h-12 w-12 rounded-lg border border-forest/10 bg-white object-cover" />
+            <input id="seoFavicon" name="seoFavicon" type="file" accept="image/png,image/jpeg,image/webp,image/avif" className="text-sm" />
+          </div>
+          <p className={adminHint}>Image carrée de préférence (512 × 512 conseillé), recadrée automatiquement. Les navigateurs peuvent mettre quelques minutes à l&apos;actualiser.</p>
+          {favicon && (
+            <label className="mt-2 flex items-center gap-2 text-xs text-forest">
+              <input type="checkbox" name="removeFavicon" className="h-4 w-4" /> Revenir à l&apos;icône par défaut
+            </label>
+          )}
         </div>
         <label className="flex items-start gap-3 text-sm text-forest">
           <input type="checkbox" name="seoNoIndex" defaultChecked={v.noIndex} className="mt-1 h-4 w-4" />

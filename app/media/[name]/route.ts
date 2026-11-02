@@ -9,6 +9,6 @@ export async function GET(_req: Request, { params }: { params: Promise<{ name: s
   const target = uploadPath(name);
   if (!target || !fs.existsSync(target)) return new Response("Introuvable", { status: 404 });
   return new Response(fs.readFileSync(target), {
-    headers: { "Content-Type": "image/webp", "Cache-Control": "public, max-age=31536000, immutable" },
+    headers: { "Content-Type": name.endsWith(".png") ? "image/png" : "image/webp", "Cache-Control": "public, max-age=31536000, immutable" },
   });
 }

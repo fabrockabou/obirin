@@ -21,7 +21,7 @@ import {
   verifyAdmin,
 } from "@/lib/store";
 import { sendWhatsapp } from "@/lib/notify";
-import { saveUpload } from "@/lib/uploads";
+import { saveFavicon, saveUpload } from "@/lib/uploads";
 import { isValidWhatsapp, normalizeWhatsapp } from "@/lib/whatsapp";
 
 export type FormState = { ok?: boolean; error?: string; message?: string };
@@ -116,8 +116,19 @@ export async function saveSeoAction(_prev: FormState, form: FormData): Promise<F
   const text = (k: string, max: number) => String(form.get(k) ?? "").trim().replace(/\s+/g, " ").slice(0, max);
   const seoImage = text("seoImage", 300);
   if (seoImage && !/^(https?:\/\/|\/)/.test(seoImage)) return { error: "L'image de partage doit commencer par / ou https://." };
+  let seoFavicon = getSettings().seoFavicon;
+  if (form.get("removeFavicon") === "on") seoFavicon = "";
+  const favFile = form.get("seoFavicon");
+  if (favFile instanceof File && favFile.size > 0) {
+    try {
+      seoFavicon = await saveFavicon(favFile);
+    } catch (e) {
+      return { error: e instanceof Error ? e.message : "Favicon non enregistrée." };
+    }
+  }
   saveSettings({
     ...getSettings(),
+    seoFavicon,
     seoTitle: text("seoTitle", 120),
     seoSiteName: text("seoSiteName", 60),
     seoDescription: text("seoDescription", 320),

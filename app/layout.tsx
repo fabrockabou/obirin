@@ -30,6 +30,7 @@ export function generateMetadata(): Metadata {
     title: { default: s.seoTitle || site.fullName, template: `%s — ${siteName}` },
     description: s.seoDescription || site.description,
     keywords: s.seoKeywords ? s.seoKeywords.split(",").map((k) => k.trim()).filter(Boolean) : undefined,
+    icons: s.seoFavicon ? { icon: s.seoFavicon, apple: s.seoFavicon } : { icon: "/icon.svg" },
     robots: s.seoNoIndex ? { index: false, follow: false } : undefined,
     openGraph: { type: "website", locale: site.locale, siteName, images: [image] },
     twitter: { card: "summary_large_image" },

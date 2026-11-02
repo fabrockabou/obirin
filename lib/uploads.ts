@@ -36,6 +36,21 @@ export async function saveUpload(file: File, { alt, cutout = false }: { alt: str
 
 /** Chemin disque d'un fichier /media/<nom>, ou null si le nom n'est pas valide (protège contre ../). */
 export function uploadPath(name: string) {
-  if (!/^[a-z0-9]+-[a-f0-9]+\.webp$/.test(name)) return null;
+  if (!/^[a-z0-9]+-[a-f0-9]+\.(webp|png)$/.test(name)) return null;
   return path.join(UPLOAD_DIR, name);
+}
+
+/** Favicon du site : recadrée en carré et convertie en PNG 256 px (compatible tous navigateurs). */
+export async function saveFavicon(file: File): Promise<string> {
+  if (!ACCEPTED.includes(file.type)) throw new Error("Format d'image non pris en charge (JPEG, PNG, WebP ou AVIF).");
+  if (file.size > MAX_UPLOAD_BYTES) throw new Error("Image trop lourde (12 Mo maximum).");
+  const output = await sharp(Buffer.from(await file.arrayBuffer()), { failOn: "error" })
+    .rotate()
+    .resize({ width: 256, height: 256, fit: "cover" })
+    .png()
+    .toBuffer();
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+  const name = `favicon-${crypto.randomBytes(5).toString("hex")}.png`;
+  fs.writeFileSync(path.join(UPLOAD_DIR, name), output);
+  return `/media/${name}`;
 }

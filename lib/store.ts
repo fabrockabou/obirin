@@ -123,6 +123,7 @@ const defaultSettings: SiteSettings = {
   seoDescription: "",
   seoKeywords: "",
   seoImage: "",
+  seoFavicon: "",
   seoNoIndex: false,
 };
 

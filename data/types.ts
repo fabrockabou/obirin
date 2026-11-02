@@ -134,6 +134,8 @@ export type SiteSettings = {
   seoKeywords: string;
   /** SEO : image de partage (Open Graph), chemin ou URL */
   seoImage: string;
+  /** SEO : favicon envoyée depuis l'admin (/media/favicon-….png). Vide = icône par défaut. */
+  seoFavicon: string;
   /** SEO : masquer le site des moteurs de recherche */
   seoNoIndex: boolean;
 };
