@@ -1,21 +1,17 @@
 import { NextResponse } from "next/server";
 import { getProduct, saveRequest } from "@/lib/store";
+import { allow, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
-// Limitation simple : 30 clics enregistrés par minute et par adresse IP (évite le remplissage abusif).
-const hits = new Map<string, { n: number; until: number }>();
+// Limitation : 30 clics enregistrés par minute et par adresse IP (évite le remplissage abusif).
 
 /**
  * Enregistre dans « Demandes reçues » un clic sur un bouton WhatsApp du site (fiche produit ou bouton
  * flottant). Le visiteur écrit ensuite depuis son propre WhatsApp : son nom et son numéro arrivent là-bas.
  */
 export async function POST(request: Request) {
-  const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "local";
-  const now = Date.now();
-  const h = hits.get(ip);
-  if (h && h.until > now && h.n >= 30) return new NextResponse(null, { status: 204 });
-  hits.set(ip, h && h.until > now ? { n: h.n + 1, until: h.until } : { n: 1, until: now + 60_000 });
+  if (!allow("whatsapp-clic", clientIp(request.headers), 30, 60_000)) return new NextResponse(null, { status: 204 });
 
   let body: Record<string, unknown> = {};
   try {

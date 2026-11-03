@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { clientIp } from "./rate-limit";
 import { getAdminUsername, getAdminVersion, getSessionSecret } from "./store";
 
 // nom configurable (utile pour faire tourner deux instances sur la même machine sans mélanger les sessions)
@@ -65,8 +66,9 @@ export async function requireAdmin() {
 const attempts = new Map<string, { count: number; until: number }>();
 export async function loginThrottle() {
   const h = await headers();
-  const ip = (h.get("x-forwarded-for") ?? "").split(",")[0].trim() || h.get("x-real-ip") || "local";
+  const ip = clientIp(h);
   const now = Date.now();
+  if (attempts.size > 5000) for (const [k, v] of attempts) if (v.until < now) attempts.delete(k);
   const entry = attempts.get(ip);
   const blocked = entry && entry.count >= 5 && entry.until > now;
   return {

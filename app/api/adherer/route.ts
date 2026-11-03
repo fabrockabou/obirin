@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sendWhatsapp } from "@/lib/notify";
 import { getProduct, getSettings, markInscriptionNotified, saveInscription } from "@/lib/store";
 import { inscriptionMessage } from "@/lib/inscription-message";
+import { allow, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -13,6 +14,8 @@ const PHONE = /^[+\d][\d\s.-]{6,}$/;
  * (visible dans /admin/inscriptions), puis envoyée sur WhatsApp si l'envoi automatique est activé.
  */
 export async function POST(request: Request) {
+  if (!allow("adherer", clientIp(request.headers), 5, 10 * 60_000))
+    return NextResponse.json({ ok: false, error: "Trop de demandes. Merci de réessayer dans quelques minutes." }, { status: 429 });
   let body: Record<string, unknown>;
   try {
     body = (await request.json()) as Record<string, unknown>;

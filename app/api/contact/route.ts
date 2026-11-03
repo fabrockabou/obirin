@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requestMessage, sendWhatsapp } from "@/lib/notify";
 import { getProduct, getSettings, markRequestNotified, saveRequest } from "@/lib/store";
 import { getService } from "@/data/services";
+import { allow, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -27,6 +28,8 @@ const clean = (v: unknown, max = 2000) => (typeof v === "string" ? v.trim().slic
  * La réponse n'indique un succès que si l'une de ces deux opérations a réellement abouti.
  */
 export async function POST(request: Request) {
+  if (!allow("contact", clientIp(request.headers), 5, 10 * 60_000))
+    return NextResponse.json({ ok: false, error: "Trop de demandes. Merci de réessayer dans quelques minutes." }, { status: 429 });
   let body: Payload;
   try {
     body = (await request.json()) as Payload;
