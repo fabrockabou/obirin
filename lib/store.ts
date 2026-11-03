@@ -144,7 +144,16 @@ function hashPassword(password: string, salt: string) {
 }
 
 export function adminExists() {
-  return fs.existsSync(file("admin.json"));
+  if (fs.existsSync(file("admin.json"))) return true;
+  // Premier démarrage sans accès au terminal : ADMIN_USERNAME + ADMIN_PASSWORD (10 caractères min.) créent le compte.
+  // Jamais d'écrasement d'un compte existant ; supprimez ADMIN_PASSWORD des variables une fois connecté.
+  const user = process.env.ADMIN_USERNAME?.trim();
+  const pass = process.env.ADMIN_PASSWORD;
+  if (user && user.length >= 3 && pass && pass.length >= 10) {
+    setAdmin(user, pass);
+    return true;
+  }
+  return false;
 }
 
 export function setAdmin(username: string, password: string) {
