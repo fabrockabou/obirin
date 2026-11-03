@@ -5,29 +5,32 @@
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start -p 3000",
+    "start": "next start",
     "lint": "tsc --noEmit",
     "assets": "node scripts/build-assets.mjs",
     "hero-video": "node scripts/render-hero-video.mjs",
     "admin:create": "node scripts/create-admin.mjs"
   },
   "dependencies": {
-    "gsap": "3.13.0",
-    "next": "15.3.3",
-    "pdfkit": "^0.15.2",
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
-  },
-  "devDependencies": {
-    "@napi-rs/canvas": "0.1.65",
     "@tailwindcss/postcss": "4.1.8",
     "@types/node": "22.15.29",
     "@types/pdfkit": "^0.13.9",
     "@types/react": "19.1.6",
     "@types/react-dom": "19.1.5",
-    "ffmpeg-static": "5.2.0",
+    "gsap": "3.13.0",
+    "next": "15.3.3",
+    "pdfkit": "^0.15.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "sharp": "0.34.2",
     "tailwindcss": "4.1.8",
     "typescript": "5.8.3"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "0.1.65",
+    "ffmpeg-static": "5.2.0"
+  },
+  "engines": {
+    "node": ">=20.9.0"
   }
 }

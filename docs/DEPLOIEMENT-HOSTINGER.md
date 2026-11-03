@@ -18,9 +18,9 @@ compte admin, demandes, images envoyées). Il lui faut donc un serveur Node avec
    - Framework : **Next.js**, version de Node : **22** (ou 20).
    - Commande d'installation : `npm ci`
    - Commande de build : `npm run build`
-   - Commande de démarrage : `npm start` (l'application doit écouter le port fourni par Hostinger :
-     si `npm start` impose le port 3000 et que Hostinger en demande un autre, utilisez
-     `npx next start -p $PORT`).
+   - Commande de démarrage : `npm start` (le port est lu automatiquement dans la variable `PORT` fournie
+     par Hostinger ; 3000 sinon). Le projet est prêt : `sharp`, Tailwind et TypeScript sont dans les
+     dépendances normales, donc l’installation « production » de Hostinger suffit au build.
 3. **Variables d'environnement** (onglet de l'application) :
    - `NEXT_PUBLIC_SITE_URL` = `https://votre-domaine.com` (à définir **avant** le build)
    - `SESSION_SECRET` = 32 caractères aléatoires minimum
