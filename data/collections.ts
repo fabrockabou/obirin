@@ -82,7 +82,7 @@ export const collections: Collection[] = [
     slug: "spiritual-help",
     name: "Spiritual Help",
     kicker: "Spiritualité & paix intérieure",
-    description: "Un espace dédié à l'accompagnement spirituel et au mieux-être intérieur. Les produits de cette collection seront bientôt présentés ici.",
+    description: "Un espace dédié à l'accompagnement spirituel et au mieux-être intérieur.",
     image: img("/images/collections/spiritual-help.webp", "Halo doré et cercles lumineux sur fond violet nuit", { kind: "editorial" }),
     tone: "violet",
   },

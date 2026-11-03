@@ -8,6 +8,7 @@
 // sont simplement omis.
 import { cataloguePage, img } from "./images";
 import monbio from "./products-monbio.json";
+import { spiritualProducts } from "./products-spiritual";
 import type { Product } from "./types";
 
 const NOTE_GROSSESSE =
@@ -721,4 +722,9 @@ export const defaultProducts: Product[] = [
   // ───────────────────────── MONBIO ─────────────────────────
   // Généré par scripts/import-monbio.mjs à partir des données du site Monbio.
   ...(monbio as unknown as Product[]),
+  // ───────────────────────── SPIRITUAL HELP ─────────────────────────
+  ...spiritualProducts,
 ];
+
+/** Produits ajoutés après la première mise en ligne : lib/store.ts les ajoute une seule fois à un stockage existant. */
+export const seedProducts: Product[] = [...spiritualProducts];

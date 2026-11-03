@@ -11,7 +11,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { defaultProducts } from "@/data/products";
+import { defaultProducts, seedProducts } from "@/data/products";
 import type { Adhesion, CollectionSlug, ContactRequest, InscriptionAdhesion, NotifyResult, Product, SiteSettings } from "@/data/types";
 
 export const STORE_DIR = path.resolve(process.env.OBIRIN_STORE_DIR || path.join(process.cwd(), "data", "store"));
@@ -55,7 +55,21 @@ function readJSON<T>(name: string, fallback: () => T): T {
 
 /** Tous les produits, y compris masqués (administration). */
 export function getAllProducts(): Product[] {
-  return readJSON<Product[]>("products.json", () => structuredClone(defaultProducts));
+  return withSeeds(readJSON<Product[]>("products.json", () => structuredClone(defaultProducts)));
+}
+
+/**
+ * Ajoute une seule fois les produits livrés avec une mise à jour du site (seedProducts) à un stockage déjà existant.
+ * Les slugs déjà traités sont mémorisés dans seeded.json : un produit supprimé depuis l'administration ne revient pas.
+ */
+function withSeeds(list: Product[]): Product[] {
+  const seeded = readJSON<string[]>("seeded.json", () => []);
+  const fresh = seedProducts.filter((p) => !seeded.includes(p.slug));
+  if (!fresh.length) return list;
+  const next = [...list, ...structuredClone(fresh).filter((p) => !list.some((x) => x.slug === p.slug))];
+  writeJSON("products.json", next);
+  writeJSON("seeded.json", [...seeded, ...fresh.map((p) => p.slug)]);
+  return next;
 }
 
 /** Produits visibles sur le site. */
