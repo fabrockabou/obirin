@@ -6,10 +6,14 @@
 // dans <stockage>/admin.json (même format que lib/store.ts).
 import crypto from "node:crypto";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import readline from "node:readline";
 
-const STORE_DIR = path.resolve(process.env.OBIRIN_STORE_DIR || path.join(process.cwd(), "data", "store"));
+// même règle que lib/store.ts : sur un serveur Linux (NODE_ENV=production), le défaut est ~/obirin-data
+const DEFAULT_STORE_DIR =
+  process.env.NODE_ENV === "production" && process.platform !== "win32" ? path.join(os.homedir(), "obirin-data") : path.join(process.cwd(), "data", "store");
+const STORE_DIR = path.resolve(process.env.OBIRIN_STORE_DIR || DEFAULT_STORE_DIR);
 
 function ask(question, { hidden = false } = {}) {
   return new Promise((resolve) => {

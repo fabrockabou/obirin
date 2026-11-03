@@ -1,6 +1,6 @@
 // Stockage modifiable du site (serveur uniquement).
 //
-// Les données vivent dans des fichiers JSON sous OBIRIN_STORE_DIR (par défaut data/store/) :
+// Les données vivent dans des fichiers JSON sous OBIRIN_STORE_DIR (par défaut data/store/, ou ~/obirin-data en production sous Linux) :
 //   products.json  — tous les produits (copie initiale de data/products.ts au premier démarrage)
 //   settings.json  — réglages (numéro WhatsApp…)
 //   admin.json     — identifiant + empreinte du mot de passe administrateur
@@ -10,11 +10,16 @@
 // Ce dossier doit être sur un disque persistant et sauvegardé : il n'est pas versionné dans Git.
 import crypto from "node:crypto";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { defaultProducts, seedProducts } from "@/data/products";
 import type { Adhesion, CollectionSlug, ContactRequest, InscriptionAdhesion, NotifyResult, Product, SiteSettings } from "@/data/types";
 
-export const STORE_DIR = path.resolve(process.env.OBIRIN_STORE_DIR || path.join(process.cwd(), "data", "store"));
+// En production sous Linux (hébergement), le dossier de l'application est remplacé à chaque déploiement :
+// sans OBIRIN_STORE_DIR, les données vont dans ~/obirin-data pour survivre aux mises à jour.
+const DEFAULT_STORE_DIR =
+  process.env.NODE_ENV === "production" && process.platform !== "win32" ? path.join(os.homedir(), "obirin-data") : path.join(process.cwd(), "data", "store");
+export const STORE_DIR = path.resolve(process.env.OBIRIN_STORE_DIR || DEFAULT_STORE_DIR);
 export const UPLOAD_DIR = path.join(STORE_DIR, "uploads");
 const REQUEST_DIR = path.join(STORE_DIR, "requests");
 const file = (name: string) => path.join(STORE_DIR, name);
