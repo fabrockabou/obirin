@@ -1,0 +1,226 @@
+@import "tailwindcss";
+
+/* Variante active uniquement quand JS est présent et que les animations sont autorisées */
+@custom-variant js-motion (.js-motion &);
+
+@keyframes scrollhint {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+
+/* Hauteur de la séquence du Hero : 100svh en version statique, 300vh (260vh mobile) en version scrubbée */
+.hero-track { height: 100svh; }
+.js-motion .hero-track { height: 300vh; }
+@media (max-width: 767px) {
+  .js-motion .hero-track { height: 260vh; }
+}
+
+/* ─────────────── Luxury Botanical — design tokens ─────────────── */
+@theme {
+  --color-abyss: #03130d; /* vert émeraude presque noir */
+  --color-forest: #0a2a1d;
+  --color-emerald: #0f4a33;
+  --color-emerald-500: #1c6b4b;
+  --color-sage: #8fae98;
+  --color-mist: #dfe8df;
+
+  --color-fuchsia: #c2185b;
+  --color-fuchsia-600: #a3134c;
+  --color-rose: #e7a9bf;
+  --color-blush: #f6e3e8;
+
+  --color-ivory: #f8f4ec;
+  --color-cream: #f1e9dc;
+  --color-sand: #e4d7c3;
+  --color-gold: #b89a5e;
+  --color-gold-soft: #d9c39a;
+
+  --color-ink: #13201a;
+  --color-ink-soft: #3e4b44;
+
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-manrope), "Manrope", system-ui, sans-serif;
+
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --text-display: clamp(3rem, 8vw, 8.5rem);
+  --text-title: clamp(2.25rem, 5vw, 4.75rem);
+  --text-subtitle: clamp(1.6rem, 3vw, 2.6rem);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scrollbar-gutter: stable;
+  }
+  body {
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--color-fuchsia);
+    color: var(--color-ivory);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-fuchsia);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  img {
+    user-select: none;
+  }
+}
+
+@layer components {
+  .container-luxe {
+    width: 100%;
+    max-width: 92rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+  }
+  .kicker {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+  .display {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+  }
+  .prose-luxe p + p {
+    margin-top: 1em;
+  }
+  .hairline {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  /* Boutons */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    padding: 0.9rem 1.75rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    overflow: hidden;
+    isolation: isolate;
+    transition: color 0.5s var(--ease-luxe), border-color 0.5s var(--ease-luxe), transform 0.5s var(--ease-luxe);
+  }
+  .btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    transform: translateY(101%);
+    transition: transform 0.6s var(--ease-luxe);
+  }
+  .btn:hover::before,
+  .btn:focus-visible::before {
+    transform: translateY(0);
+  }
+  .btn .btn-arrow {
+    transition: transform 0.5s var(--ease-luxe);
+  }
+  .btn:hover .btn-arrow {
+    transform: translateX(4px);
+  }
+  .btn-primary {
+    background: var(--color-fuchsia);
+    color: var(--color-ivory);
+  }
+  .btn-primary::before {
+    background: var(--color-fuchsia-600);
+  }
+  .btn-light {
+    background: var(--color-ivory);
+    color: var(--color-forest);
+  }
+  .btn-light::before {
+    background: var(--color-gold-soft);
+  }
+  .btn-ghost-light {
+    border: 1px solid rgb(248 244 236 / 0.45);
+    color: var(--color-ivory);
+  }
+  .btn-ghost-light::before {
+    background: var(--color-ivory);
+  }
+  .btn-ghost-light:hover {
+    color: var(--color-forest);
+  }
+  .btn-ghost-dark {
+    border: 1px solid rgb(19 32 26 / 0.25);
+    color: var(--color-forest);
+  }
+  .btn-ghost-dark::before {
+    background: var(--color-forest);
+  }
+  .btn-ghost-dark:hover {
+    color: var(--color-ivory);
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.6s var(--ease-luxe);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* Révélations : état initial appliqué seulement quand JS + animations sont actifs */
+.js-motion [data-reveal] {
+  opacity: 0;
+}
+.js-motion [data-word] {
+  opacity: 0.16;
+}
+.js-motion [data-reveal="mask"] {
+  opacity: 1;
+  clip-path: inset(100% 0 0 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .js-motion [data-reveal],
+  .js-motion [data-word] {
+    opacity: 1 !important;
+    clip-path: none !important;
+    transform: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

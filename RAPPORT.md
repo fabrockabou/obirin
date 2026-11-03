@@ -1,0 +1,101 @@
+# Obirin — site premium (produits Green World) : rapport de livraison
+
+## Lancer le projet
+```
+npm install --ignore-scripts && node node_modules/ffmpeg-static/install.js   # ffmpeg sert uniquement à régénérer le film
+npm run dev          # http://localhost:3000
+npm run build && npm start
+npm run assets       # régénère les images depuis /source (catalogue, packshots, photos de collections)
+npm run hero-video   # régénère le film provisoire du Hero
+```
+En production, définir `NEXT_PUBLIC_SITE_URL` (URL canoniques, sitemap, Open Graph) et, si possible, `CONTACT_WEBHOOK_URL` (voir `.env.example`).
+
+## Stack
+Next.js 15 (App Router) · TypeScript · Tailwind CSS 4 · GSAP 3.13 + ScrollTrigger (aucune autre librairie d'animation) · next/image.
+Données centralisées : `data/products.ts`, `data/collections.ts`, `data/services.ts`, `data/site.ts`.
+
+## Analyse du catalogue (22 pages)
+Le PDF ne contient aucun texte : chaque page est une image. Toutes les pages ont été lues visuellement et retranscrites.
+- Pages 1–3 : couverture, présentation Octobre Rose, chapitre Santé & équilibre féminin (→ pages éditoriales).
+- Pages 4–19 (numérotation imprimée) : **13 produits**, chacun avec sa page.
+- Page 13 : présentation Beauté & Éclat (→ collection).
+- Pages 20–22 : services (présentation, Rendez-vous de bien-être 5 000 FCFA, Bain ionique des pieds 5 000 FCFA) ; dernière page : siège Green World Côte d'Ivoire.
+- Remarque : la page imprimée **10 n'existe pas** (le PDF passe de 9 à 11).
+
+| Produit | Prix | Format |
+|---|---|---|
+| Thé Soin des Seins | 9 900 | 4 g × 16 sachets |
+| Soja Puissance | 11 880 | 300 mg × 90 capsules |
+| Nutrition Ovarienne | 15 840 | 300 mg × 90 capsules |
+| Pilules Nettoyantes pour l'Utérus | 21 120 | 1 g × 6 pills |
+| Gelée Royale | 12 210 | 600 mg × 30 gélules |
+| Serviettes hygiéniques Jour / Nuit | 2 400 / 2 400 | 245 mm × 10 / 290 mm × 8 |
+| Thé d'Amaigrissement Pro-Slim Tea | 7 920 | 4 g × 16 sachets |
+| Chitosan Capsule | 15 840 | 400 mg × 60 capsules |
+| Peptide de Collagène Blueberry Colafruit | 13 200 | 300 g (25 g × 12) |
+| Savon d'Olive | 1 440 | 100 g |
+| Lotion Tonique Bleuet | 11 880 | 100 ml |
+| Sérum Visage Bleuet | 16 500 | 50 ml |
+| Crème Contour des Yeux Bleuet | 12 540 | 30 g |
+| Shampooing à la Kératine | 6 600 | 255 ml |
+
+## Fonctionnalités livrées et testées
+- **Hero piloté par le scroll** (300 vh, 260 vh mobile) : vidéo téléchargée en blob puis scrubbée par ScrollTrigger dans les deux sens ; textes HTML synchronisés ; indicateur de progression. Vérifié : 15,6 % de scroll → 1,69 s (attendu 1,56 s avec lissage), 38 % → 3,78 s.
+  - Film portrait pour les écrans en orientation portrait, version allégée 1,2 Mo pour les connexions 2G/3G, affiches seules si Save-Data, repli sur affiches si la vidéo échoue, version statique (titre + boutons) sans JavaScript ou avec « réduire les animations ».
+- **Accueil** : philosophie, 6 univers, sélection éditoriale, rituel bleuet en défilement horizontal épinglé (desktop) / vertical (mobile), services, signature de marque.
+- **17 pages produits** (13 du catalogue + 3 références hors catalogue + serviettes avec variantes Jour/Nuit) en **4 mises en page** alternées (éditoriale, immersive, split, portrait), galerie (clavier, vignettes, fiche catalogue d'origine), produits associés, navigation précédent/suivant. Le choix Jour/Nuit met à jour prix, format, image et lien de demande (testé).
+- **6 collections**, **2 pages services**, **Notre marque**, **Contact**, 404, sitemap (30 URLs), robots.txt, métadonnées et Open Graph par page, JSON-LD (Organization, Product avec prix en XOF, Service, BreadcrumbList).
+- **Navigation** : header transparent → vert profond → ivoire, masqué au scroll descendant ; menu plein écran mobile (focus piégé, Échap, retour du focus) ; recherche produits/services (touche « / », insensible aux accents) — testés.
+- **Contact** : formulaire pré-rempli depuis un produit, une variante ou un service ; validation serveur ; anti-spam. Testé de bout en bout : la demande est enregistrée dans `data/.requests/` ou transmise à `CONTACT_WEBHOOK_URL`. Aucun paiement ni panier simulé.
+- `npm run build` : OK, 39 routes, pages produits/collections/services pré-générées. 33 routes vérifiées (200 / 307 / 404 attendus).
+
+## Visuels
+- Packshots fournis : utilisés pour Nutrition Ovarienne, Soja Puissance, Gelée Royale, Serviettes Jour (avec versions détourées, étiquettes intactes).
+- Les autres produits : extraits fidèles de leur page du catalogue (produit complet, jamais recadré).
+- Photos de collections : vos 7 portraits (`source/collections`) sont utilisés pour les 6 collections et l'univers Services.
+
+## Collection Monbio (/collections/monbio)
+- 20 produits repris du site officiel groupemonbio.com : savons liquides de Marseille, coton, disques démaquillants, papiers et sachets parfumés.
+- Noms, descriptions, formats et photos : identiques au site Monbio. Aucune mention d'origine ni de source n'est affichée sur les fiches (photos dans `source/monbio`, optimisées dans `public/images/monbio`).
+- Prix : prix public Monbio en euros × 655,957, arrondi à la centaine de FCFA. C'est la règle d'affichage du site Monbio. Les prix « pro » ne sont pas repris.
+- Fiche technique PDF Monbio : non reprise.
+- « Papiers Parfumés — Lot de 3 » est **masqué**, car la photo publiée par Monbio montre un savon. À réactiver dans /admin après avoir ajouté une bonne photo.
+- Ré-import : `node scripts/import-monbio.mjs --store` ajoute les produits manquants sans écraser ceux modifiés dans /admin.
+- Les produits Monbio apparaissent dans la boutique (filtre « Monbio »), sur l'accueil (tuile Monbio), dans la recherche, le plan du site et l'administration.
+
+## Points à valider / éléments manquants
+1. **Chitosan** : le catalogue indique 400 mg × **60** capsules (flacon blanc) ; votre packshot montre un flacon bleu 400 mg × **100** capsules. Le site suit le catalogue et présente le flacon bleu comme « autre conditionnement, prix non communiqué ».
+2. **Savon d'olive** : votre packshot porte les mentions « 245 mm / Anion Enjoyable / 10 pétos » (celles des serviettes). Il n'est pas utilisé ; le visuel du catalogue est affiché.
+3. **Slimming Capsule, Multi-Vitamins (enfants), Zinc (enfants)** : absents du catalogue d'octobre → collection « Autres références », informations limitées au texte de l'emballage, « prix sur demande ».
+4. **Coordonnées** : aucun téléphone, e-mail, adresse ni horaires dans le catalogue → rien n'a été inventé ; à fournir.
+5. **Film du Hero** : provisoire (motion design à partir des packshots). Brief du film définitif : `docs/hero-video-brief.md`.
+6. **Résolution** : les extraits du catalogue font ~300–600 px ; des packshots HD détourés des autres produits amélioreraient nettement le rendu.
+7. Commerce en ligne : architecture prête (données centralisées, route API), mais panier, paiement, stock et comptes restent à intégrer quand une solution est choisie.
+
+## Identité du site
+- Logo : mot-symbole **OBIRIN** (gras, typographique, `components/brand/Logo.tsx`), favicon `app/icon.svg`, ouverture du film du Hero.
+- Nom du site, titres de pages, Hero, textes de marque, formulaire, pied de page : **Obirin**.
+- « Green World » reste uniquement là où il désigne la marque des produits ou la source : emballages, textes alternatifs des photos produits, mention « catalogue Green World — octobre 2026 », marque produit dans les données structurées.
+
+## Espace d'administration (/admin)
+- **Créer le compte** (une seule fois, depuis le dossier du site) : `npm run admin:create` — identifiant + mot de passe (10 caractères min., saisie masquée). Relancer la commande remplace le compte et déconnecte toutes les sessions.
+- **Se connecter** : `/admin/connexion` (ex. http://localhost:3001/admin/connexion). Session de 7 jours, 5 essais max. par 15 min.
+- **Produits** : modifier prix, variantes, images (principale, détourée, galerie), textes, bienfaits, composition, conseils, précautions, mise en page, couleur, produits associés ; masquer/afficher ; créer ; supprimer. Le site se met à jour à l'enregistrement, sans rebuild.
+- **Demandes reçues** : toutes les demandes du formulaire, avec appel et réponse WhatsApp en un clic.
+- **Adhésions** (indépendantes du site web) : « Ajouter une adhésion » (nom, prénom, date de naissance, pays, e-mails, téléphones, adresse, date d'adhésion, nombre d'adhérents ajoutés, nombre de produits achetés) et « Liste des adhésions » (recherche sans accents, filtre par pays, totaux, modification, suppression, export **CSV** pour Excel et **PDF** A4 paysage — les exports suivent le filtre en cours).
+- **Réglages & WhatsApp** : numéro WhatsApp Business (vide = boutons masqués), début des messages, changement de mot de passe.
+- **Envoi automatique sur WhatsApp** : chaque formulaire du site (produit, rendez-vous, question) part automatiquement sur WhatsApp (nom, téléphone du visiteur, produit/service, message, lien « Répondre »). À activer dans *Réglages & WhatsApp* : **CallMeBot** (gratuit, clé obtenue en écrivant au robot) ou **API officielle Meta** (identifiants dans `.env.local`). Bouton « Envoyer un message de test » ; statut d'envoi affiché sur chaque demande ; une demande n'est jamais perdue si WhatsApp échoue.
+- **WhatsApp** : bouton « Commander sur WhatsApp » sur chaque fiche (produit, variante, prix, lien) et « Envoyer aussi sur WhatsApp » après le formulaire (nom, téléphone du visiteur, produit, message).
+- **Données** : `data/store/` (produits, réglages, compte, demandes, images envoyées). Non versionné dans Git (données personnelles et mot de passe) : **à sauvegarder séparément**. `data/products.ts` ne sert plus que de contenu initial.
+- **Hébergement** : il faut un serveur Node avec disque persistant (VPS, Railway/Render avec volume…). Un hébergement sans disque (Vercel) ne conserverait pas les modifications.
+
+## Adhérer à Green World (/adherer) et « Adhésions du site »
+- Page publique avec formulaire : nom, prénom, produits qui intéressent (liste à cocher de tous les produits, avec recherche), e-mail, téléphone, WhatsApp (optionnel), adresse.
+- Chaque demande est enregistrée dans `data/store/inscriptions.json`. Elle est consultable dans /admin → **Adhésions du site**, avec appel, réponse WhatsApp, e-mail, suppression et export CSV.
+- Comme pour le contact : WhatsApp s'ouvre avec le message prêt, et l'envoi automatique est fait si activé dans Réglages.
+- Accès : bouton « Adhérer » dans l'en-tête, et « Adhérer à Green World » dans le menu mobile.
+
+## Autres ajouts
+- Slogan : « Beauté – Bien-être – Spiritualité » (Hero, pied de page, Notre marque, titre du site).
+- Fiche produit : mention de livraison sous le prix (texte modifiable dans `data/site.ts`, `deliveryNote`).
+- Collection **Spiritual Help** : créée vide, avec le message « Bientôt disponible ». Ajoutez-y des produits depuis /admin → Produits → Nouveau produit → Univers « Spiritual Help ». Le visuel est décoratif ; remplacez-le si vous avez une photo.

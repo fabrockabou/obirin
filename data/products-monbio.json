@@ -1,0 +1,618 @@
+[
+  {
+    "slug": "savon-liquide-de-marseille-miel-et-lait",
+    "name": "Savon Liquide de Marseille — Miel et Lait",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 6500,
+    "format": "1 L",
+    "catalogueCategory": "Savons",
+    "cataloguePage": null,
+    "tagline": "Calme les rougeurs et améliore la texture de la peau.",
+    "intro": "Calme les rougeurs et améliore la texture de la peau. Enrichi en vitamines A, B, C, D, E du lait cru de vache et en miel nourrissant qui ralentit le vieillissement cutané. Pour tous types de peau.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/1.webp",
+      "alt": "Savon Liquide de Marseille — Miel et Lait — photo Monbio",
+      "width": 896,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "honey",
+    "related": [
+      "savon-liquide-de-marseille-huile-d-argan",
+      "savon-liquide-de-marseille-lait-de-chevre",
+      "savon-liquide-de-marseille-olivier"
+    ]
+  },
+  {
+    "slug": "savon-liquide-de-marseille-huile-d-argan",
+    "name": "Savon Liquide de Marseille — Huile d'Argan",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 6500,
+    "format": "1 L",
+    "catalogueCategory": "Savons",
+    "cataloguePage": null,
+    "tagline": "À l'huile d'argan bio et à l'huile d'olive vierge bio riche en oméga 9.",
+    "intro": "À l'huile d'argan bio et à l'huile d'olive vierge bio riche en oméga 9. Nettoie, hydrate, apaise, nourrit et tonifie la peau. Sans parabène ni tensio-actif de synthèse.",
+    "benefits": [],
+    "image": {
+      "src": "/images/monbio/2.webp",
+      "alt": "Savon Liquide de Marseille — Huile d'Argan — photo Monbio",
+      "width": 897,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "honey",
+    "related": [
+      "savon-liquide-de-marseille-miel-et-lait",
+      "savon-liquide-de-marseille-lait-de-chevre",
+      "savon-liquide-de-marseille-olivier"
+    ]
+  },
+  {
+    "slug": "savon-liquide-de-marseille-lait-de-chevre",
+    "name": "Savon Liquide de Marseille — Lait de Chèvre",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 6500,
+    "format": "1 L",
+    "catalogueCategory": "Savons",
+    "cataloguePage": null,
+    "tagline": "Au lait de chèvre bio riche en minéraux et vitamines.",
+    "intro": "Au lait de chèvre bio riche en minéraux et vitamines. Nettoie, hydrate, apaise, nourrit, rafraîchit et agit comme antioxydant. Doux pour les peaux sensibles.",
+    "benefits": [],
+    "image": {
+      "src": "/images/monbio/3.webp",
+      "alt": "Savon Liquide de Marseille — Lait de Chèvre — photo Monbio",
+      "width": 897,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "honey",
+    "related": [
+      "savon-liquide-de-marseille-miel-et-lait",
+      "savon-liquide-de-marseille-huile-d-argan",
+      "savon-liquide-de-marseille-olivier"
+    ]
+  },
+  {
+    "slug": "savon-liquide-de-marseille-olivier",
+    "name": "Savon Liquide de Marseille — Olivier",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 6500,
+    "format": "1 L",
+    "catalogueCategory": "Savons",
+    "cataloguePage": null,
+    "tagline": "Pur Olive à l'huile d'olive bio saponifiée.",
+    "intro": "Pur Olive à l'huile d'olive bio saponifiée. Riche en acides gras et vitamine E, nourrit et hydrate en profondeur, renforce la barrière cutanée et apaise les peaux sensibles.",
+    "benefits": [],
+    "image": {
+      "src": "/images/monbio/4.webp",
+      "alt": "Savon Liquide de Marseille — Olivier — photo Monbio",
+      "width": 897,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "honey",
+    "related": [
+      "savon-liquide-de-marseille-miel-et-lait",
+      "savon-liquide-de-marseille-huile-d-argan",
+      "savon-liquide-de-marseille-lait-de-chevre"
+    ]
+  },
+  {
+    "slug": "savon-liquide-de-marseille-lavande",
+    "name": "Savon Liquide de Marseille — Lavande",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 6500,
+    "format": "1 L",
+    "catalogueCategory": "Savons",
+    "cataloguePage": null,
+    "tagline": "Parfum délicat de lavande créé à Grasse.",
+    "intro": "Parfum délicat de lavande créé à Grasse. Texture enveloppante qui protège l'épiderme et convient même aux peaux sèches. Diffuse des notes florales à chaque lavage.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/5.webp",
+      "alt": "Savon Liquide de Marseille — Lavande — photo Monbio",
+      "width": 897,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "honey",
+    "related": [
+      "savon-liquide-de-marseille-miel-et-lait",
+      "savon-liquide-de-marseille-huile-d-argan",
+      "savon-liquide-de-marseille-lait-de-chevre"
+    ]
+  },
+  {
+    "slug": "coton-hydrophile-monbio-50g",
+    "name": "Coton Hydrophile Monbio — 50g",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 1600,
+    "format": "50 g",
+    "catalogueCategory": "Coton",
+    "cataloguePage": null,
+    "tagline": "100% pur coton naturel antibactérien.",
+    "intro": "100% pur coton naturel antibactérien. Doux, absorbant, idéal pour les soins quotidiens du corps. Sachet pratique refermable.",
+    "benefits": [],
+    "image": {
+      "src": "/images/monbio/6.webp",
+      "alt": "Coton Hydrophile Monbio — 50g — photo Monbio",
+      "width": 899,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "ocean",
+    "related": [
+      "coton-hydrophile-monbio-100g",
+      "rouleau-de-coton-hydrophile-monbio-500g"
+    ]
+  },
+  {
+    "slug": "coton-hydrophile-monbio-100g",
+    "name": "Coton Hydrophile Monbio — 100g",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 2600,
+    "format": "100 g",
+    "catalogueCategory": "Coton",
+    "cataloguePage": null,
+    "tagline": "100% pur coton naturel antibactérien.",
+    "intro": "100% pur coton naturel antibactérien. Format familial pour les soins du corps et premiers secours. Ultra-doux et résistant.",
+    "benefits": [],
+    "image": {
+      "src": "/images/monbio/7.webp",
+      "alt": "Coton Hydrophile Monbio — 100g — photo Monbio",
+      "width": 899,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "ocean",
+    "related": [
+      "coton-hydrophile-monbio-50g",
+      "rouleau-de-coton-hydrophile-monbio-500g"
+    ]
+  },
+  {
+    "slug": "rouleau-de-coton-hydrophile-monbio-500g",
+    "name": "Rouleau de Coton Hydrophile Monbio — 500g",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 5200,
+    "format": "500 g",
+    "catalogueCategory": "Coton",
+    "cataloguePage": null,
+    "tagline": "Rouleau de coton hydrophile 100% pur coton.",
+    "intro": "Rouleau de coton hydrophile 100% pur coton. Usage médical et cosmétique. Certifié CE.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/8.webp",
+      "alt": "Rouleau de Coton Hydrophile Monbio — 500g — photo Monbio",
+      "width": 899,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "ocean",
+    "related": [
+      "coton-hydrophile-monbio-50g",
+      "coton-hydrophile-monbio-100g"
+    ]
+  },
+  {
+    "slug": "disques-demaquillants-monbio-50-pcs",
+    "name": "Disques Démaquillants Monbio — 50 PCS",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 2300,
+    "format": "50 pièces",
+    "catalogueCategory": "Visage",
+    "cataloguePage": null,
+    "tagline": "Disques démaquillants 100% pur coton naturel.",
+    "intro": "Disques démaquillants 100% pur coton naturel. Extrêmement doux pour le visage, idéaux pour le démaquillage et les soins quotidiens.",
+    "benefits": [],
+    "image": {
+      "src": "/images/monbio/9.webp",
+      "alt": "Disques Démaquillants Monbio — 50 PCS — photo Monbio",
+      "width": 899,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "ivory",
+    "related": []
+  },
+  {
+    "slug": "papiers-parfumes-monbio-lot-de-3",
+    "name": "Papiers Parfumés Monbio — Lot de 3",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 4300,
+    "format": "Lot de 3 senteurs",
+    "catalogueCategory": "Senteurs",
+    "cataloguePage": null,
+    "tagline": "Papiers parfumés naturels aux essences délicates et durables.",
+    "intro": "Papiers parfumés naturels aux essences délicates et durables. Idéaux pour parfumer votre véhicule, armoire, chambre ou dressing. Diffusent un parfum subtil pendant des semaines.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/10.webp",
+      "alt": "Papiers Parfumés Monbio — Lot de 3 — photo Monbio",
+      "width": 896,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "rose",
+    "related": [
+      "sachet-parfume-monbio-nuit-d-orient",
+      "sachet-parfume-monbio-coton",
+      "sachet-parfume-monbio-lavande"
+    ],
+    "hidden": true
+  },
+  {
+    "slug": "sachet-parfume-monbio-nuit-d-orient",
+    "name": "Sachet Parfumé Monbio — Nuit d'Orient",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 2000,
+    "format": "21 g",
+    "catalogueCategory": "Senteurs",
+    "cataloguePage": null,
+    "tagline": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain.",
+    "intro": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain. Nuit d'Orient dévoile des notes chaudes et envoûtantes d'ambre et d'épices précieuses qui embaument vos espaces pendant des semaines.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/11.webp",
+      "alt": "Sachet Parfumé Monbio — Nuit d'Orient — photo Monbio",
+      "width": 1200,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "rose",
+    "related": [
+      "sachet-parfume-monbio-coton",
+      "sachet-parfume-monbio-lavande",
+      "sachet-parfume-monbio-mango"
+    ]
+  },
+  {
+    "slug": "sachet-parfume-monbio-coton",
+    "name": "Sachet Parfumé Monbio — Coton",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 2000,
+    "format": "21 g",
+    "catalogueCategory": "Senteurs",
+    "cataloguePage": null,
+    "tagline": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain.",
+    "intro": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain. Coton offre une senteur propre et douce de linge frais, pour une sensation de fraîcheur immaculée qui dure des semaines.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/12.webp",
+      "alt": "Sachet Parfumé Monbio — Coton — photo Monbio",
+      "width": 1200,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "rose",
+    "related": [
+      "sachet-parfume-monbio-nuit-d-orient",
+      "sachet-parfume-monbio-lavande",
+      "sachet-parfume-monbio-mango"
+    ]
+  },
+  {
+    "slug": "sachet-parfume-monbio-lavande",
+    "name": "Sachet Parfumé Monbio — Lavande",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 2000,
+    "format": "21 g",
+    "catalogueCategory": "Senteurs",
+    "cataloguePage": null,
+    "tagline": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain.",
+    "intro": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain. Lavande diffuse un parfum floral et apaisant tout droit venu de Provence, réputé pour éloigner les mites et détendre l'esprit.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/13.webp",
+      "alt": "Sachet Parfumé Monbio — Lavande — photo Monbio",
+      "width": 1200,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "rose",
+    "related": [
+      "sachet-parfume-monbio-nuit-d-orient",
+      "sachet-parfume-monbio-coton",
+      "sachet-parfume-monbio-mango"
+    ]
+  },
+  {
+    "slug": "sachet-parfume-monbio-mango",
+    "name": "Sachet Parfumé Monbio — Mango",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 2000,
+    "format": "21 g",
+    "catalogueCategory": "Senteurs",
+    "cataloguePage": null,
+    "tagline": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain.",
+    "intro": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain. Mango libère une senteur fruitée et solaire de mangue mûre, gourmande et exotique, qui parfume vos espaces pendant des semaines.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/14.webp",
+      "alt": "Sachet Parfumé Monbio — Mango — photo Monbio",
+      "width": 1200,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "rose",
+    "related": [
+      "sachet-parfume-monbio-nuit-d-orient",
+      "sachet-parfume-monbio-coton",
+      "sachet-parfume-monbio-lavande"
+    ]
+  },
+  {
+    "slug": "sachet-parfume-monbio-ocean",
+    "name": "Sachet Parfumé Monbio — Ocean",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 2000,
+    "format": "21 g",
+    "catalogueCategory": "Senteurs",
+    "cataloguePage": null,
+    "tagline": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain.",
+    "intro": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain. Ocean évoque un souffle marin frais et vivifiant, une bouffée d'air iodé qui rafraîchit durablement chaque recoin.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/15.webp",
+      "alt": "Sachet Parfumé Monbio — Ocean — photo Monbio",
+      "width": 1200,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "rose",
+    "related": [
+      "sachet-parfume-monbio-nuit-d-orient",
+      "sachet-parfume-monbio-coton",
+      "sachet-parfume-monbio-lavande"
+    ]
+  },
+  {
+    "slug": "sachet-parfume-monbio-vanille",
+    "name": "Sachet Parfumé Monbio — Vanille",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 2000,
+    "format": "21 g",
+    "catalogueCategory": "Senteurs",
+    "cataloguePage": null,
+    "tagline": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain.",
+    "intro": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain. Vanille enveloppe vos espaces d'un parfum gourmand, doux et chaleureux, aussi réconfortant qu'une caresse.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/16.webp",
+      "alt": "Sachet Parfumé Monbio — Vanille — photo Monbio",
+      "width": 1200,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "rose",
+    "related": [
+      "sachet-parfume-monbio-nuit-d-orient",
+      "sachet-parfume-monbio-coton",
+      "sachet-parfume-monbio-lavande"
+    ]
+  },
+  {
+    "slug": "sachet-parfume-monbio-bouquet-royal",
+    "name": "Sachet Parfumé Monbio — Bouquet Royal",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 2000,
+    "format": "21 g",
+    "catalogueCategory": "Senteurs",
+    "cataloguePage": null,
+    "tagline": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain.",
+    "intro": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain. Bouquet Royal compose un accord floral raffiné de rose et de fleurs précieuses, élégant et intemporel, qui embaume pendant des semaines.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/17.webp",
+      "alt": "Sachet Parfumé Monbio — Bouquet Royal — photo Monbio",
+      "width": 1200,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "rose",
+    "related": [
+      "sachet-parfume-monbio-nuit-d-orient",
+      "sachet-parfume-monbio-coton",
+      "sachet-parfume-monbio-lavande"
+    ]
+  },
+  {
+    "slug": "sachet-parfume-monbio-savon-de-marseille",
+    "name": "Sachet Parfumé Monbio — Savon de Marseille",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 2000,
+    "format": "21 g",
+    "catalogueCategory": "Senteurs",
+    "cataloguePage": null,
+    "tagline": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain.",
+    "intro": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain. Savon de Marseille recrée la senteur authentique et propre du savon traditionnel, pour un parfum de linge frais et rassurant.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/18.webp",
+      "alt": "Sachet Parfumé Monbio — Savon de Marseille — photo Monbio",
+      "width": 1200,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "rose",
+    "related": [
+      "sachet-parfume-monbio-nuit-d-orient",
+      "sachet-parfume-monbio-coton",
+      "sachet-parfume-monbio-lavande"
+    ]
+  },
+  {
+    "slug": "sachet-parfume-monbio-essentiel",
+    "name": "Sachet Parfumé Monbio — Essentiel",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 2000,
+    "format": "21 g",
+    "catalogueCategory": "Senteurs",
+    "cataloguePage": null,
+    "tagline": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain.",
+    "intro": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain. Essentiel révèle une senteur fraîche et délicate, la signature épurée Monbio, qui rafraîchit subtilement tous vos espaces.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/19.webp",
+      "alt": "Sachet Parfumé Monbio — Essentiel — photo Monbio",
+      "width": 1200,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "rose",
+    "related": [
+      "sachet-parfume-monbio-nuit-d-orient",
+      "sachet-parfume-monbio-coton",
+      "sachet-parfume-monbio-lavande"
+    ]
+  },
+  {
+    "slug": "sachet-parfume-monbio-royal-santal",
+    "name": "Sachet Parfumé Monbio — Royal Santal",
+    "packagingName": "Monbio",
+    "brand": "Monbio",
+    "collection": "monbio",
+    "price": 2000,
+    "format": "21 g",
+    "catalogueCategory": "Senteurs",
+    "cataloguePage": null,
+    "tagline": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain.",
+    "intro": "Sachet parfumé à suspendre ou à glisser partout : penderie, armoire, tiroir, voiture, valise, lit ou salle de bain. Royal Santal déploie un parfum boisé et sophistiqué de bois de santal, chaud et enveloppant, pour une ambiance raffinée qui perdure.",
+    "benefits": [],
+    "highlights": [
+      "Nouveauté"
+    ],
+    "image": {
+      "src": "/images/monbio/20.webp",
+      "alt": "Sachet Parfumé Monbio — Royal Santal — photo Monbio",
+      "width": 1200,
+      "height": 1200,
+      "kind": "packshot"
+    },
+    "gallery": [],
+    "layout": "split",
+    "tone": "rose",
+    "related": [
+      "sachet-parfume-monbio-nuit-d-orient",
+      "sachet-parfume-monbio-coton",
+      "sachet-parfume-monbio-lavande"
+    ]
+  }
+]

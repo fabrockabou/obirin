@@ -1,0 +1,418 @@
+{
+ "/images/brand/green-world-emblem.png": [
+  654,
+  424
+ ],
+ "/images/brand/green-world-logo.png": [
+  860,
+  552
+ ],
+ "/images/catalogue/page-01.webp": [
+  1024,
+  1434
+ ],
+ "/images/catalogue/page-02.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-03.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-04.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-05.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-06.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-07.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-08.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-09.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-10.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-11.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-12.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-13.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-14.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-15.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-16.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-17.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-18.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-19.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-20.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-21.webp": [
+  1024,
+  1536
+ ],
+ "/images/catalogue/page-22.webp": [
+  1024,
+  1536
+ ],
+ "/images/collections/autres-references.webp": [
+  1374,
+  1145
+ ],
+ "/images/collections/beaute-eclat.webp": [
+  1145,
+  1374
+ ],
+ "/images/collections/hygiene-soin-quotidien.webp": [
+  1145,
+  1374
+ ],
+ "/images/collections/minceur-nutrition.webp": [
+  1145,
+  1374
+ ],
+ "/images/collections/monbio.webp": [
+  1047,
+  1400
+ ],
+ "/images/collections/sante-feminine.webp": [
+  1536,
+  1024
+ ],
+ "/images/collections/services-bien-etre.webp": [
+  1374,
+  1145
+ ],
+ "/images/collections/soins-capillaires.webp": [
+  1145,
+  1374
+ ],
+ "/images/editorial/bain-ionique-bassin.webp": [
+  280,
+  260
+ ],
+ "/images/editorial/bain-ionique.webp": [
+  340,
+  780
+ ],
+ "/images/editorial/beaute-eclat-ingredients.webp": [
+  644,
+  215
+ ],
+ "/images/editorial/beaute-eclat-portrait.webp": [
+  440,
+  1080
+ ],
+ "/images/editorial/cover-portrait.webp": [
+  520,
+  940
+ ],
+ "/images/editorial/femmes-portrait.webp": [
+  470,
+  700
+ ],
+ "/images/editorial/philosophie-portrait.webp": [
+  1145,
+  1374
+ ],
+ "/images/editorial/rendez-vous-analyse.webp": [
+  554,
+  500
+ ],
+ "/images/editorial/savon-gestuelle.webp": [
+  325,
+  560
+ ],
+ "/images/editorial/services-consultation.webp": [
+  552,
+  490
+ ],
+ "/images/editorial/services-detente.webp": [
+  984,
+  230
+ ],
+ "/images/editorial/siege-cote-ivoire.webp": [
+  544,
+  620
+ ],
+ "/images/editorial/silhouette.webp": [
+  420,
+  520
+ ],
+ "/images/editorial/soin-cheveux.webp": [
+  470,
+  820
+ ],
+ "/images/editorial/soin-visage.webp": [
+  430,
+  560
+ ],
+ "/images/monbio/1.webp": [
+  896,
+  1200
+ ],
+ "/images/monbio/10.webp": [
+  896,
+  1200
+ ],
+ "/images/monbio/11.webp": [
+  1200,
+  1200
+ ],
+ "/images/monbio/12.webp": [
+  1200,
+  1200
+ ],
+ "/images/monbio/13.webp": [
+  1200,
+  1200
+ ],
+ "/images/monbio/14.webp": [
+  1200,
+  1200
+ ],
+ "/images/monbio/15.webp": [
+  1200,
+  1200
+ ],
+ "/images/monbio/16.webp": [
+  1200,
+  1200
+ ],
+ "/images/monbio/17.webp": [
+  1200,
+  1200
+ ],
+ "/images/monbio/18.webp": [
+  1200,
+  1200
+ ],
+ "/images/monbio/19.webp": [
+  1200,
+  1200
+ ],
+ "/images/monbio/2.webp": [
+  897,
+  1200
+ ],
+ "/images/monbio/20.webp": [
+  1200,
+  1200
+ ],
+ "/images/monbio/3.webp": [
+  897,
+  1200
+ ],
+ "/images/monbio/4.webp": [
+  897,
+  1200
+ ],
+ "/images/monbio/5.webp": [
+  897,
+  1200
+ ],
+ "/images/monbio/6.webp": [
+  899,
+  1200
+ ],
+ "/images/monbio/7.webp": [
+  899,
+  1200
+ ],
+ "/images/monbio/8.webp": [
+  899,
+  1200
+ ],
+ "/images/monbio/9.webp": [
+  899,
+  1200
+ ],
+ "/images/packshots/chitosan-capsule-100-detoure.webp": [
+  769,
+  1520
+ ],
+ "/images/packshots/chitosan-capsule-100.webp": [
+  951,
+  1702
+ ],
+ "/images/packshots/gelee-royale-detoure.webp": [
+  839,
+  1603
+ ],
+ "/images/packshots/gelee-royale.webp": [
+  1031,
+  1795
+ ],
+ "/images/packshots/multi-vitamines-enfants-detoure.webp": [
+  812,
+  1508
+ ],
+ "/images/packshots/multi-vitamines-enfants.webp": [
+  992,
+  1688
+ ],
+ "/images/packshots/nutrition-ovarienne-detoure.webp": [
+  824,
+  1506
+ ],
+ "/images/packshots/nutrition-ovarienne.webp": [
+  1004,
+  1686
+ ],
+ "/images/packshots/savon-olive-packshot-detoure.webp": [
+  1625,
+  862
+ ],
+ "/images/packshots/savon-olive-packshot.webp": [
+  1821,
+  1058
+ ],
+ "/images/packshots/serviettes-jour-detoure.webp": [
+  1554,
+  885
+ ],
+ "/images/packshots/serviettes-jour.webp": [
+  1740,
+  1071
+ ],
+ "/images/packshots/slimming-capsule-detoure.webp": [
+  753,
+  1475
+ ],
+ "/images/packshots/slimming-capsule.webp": [
+  931,
+  1653
+ ],
+ "/images/packshots/soja-puissance-detoure.webp": [
+  730,
+  1480
+ ],
+ "/images/packshots/soja-puissance.webp": [
+  908,
+  1658
+ ],
+ "/images/packshots/zinc-enfants-detoure.webp": [
+  796,
+  1435
+ ],
+ "/images/packshots/zinc-enfants.webp": [
+  968,
+  1607
+ ],
+ "/images/products/chitosan-capsule.webp": [
+  293,
+  538
+ ],
+ "/images/products/collagene-blueberry-colafruit.webp": [
+  425,
+  262
+ ],
+ "/images/products/creme-contour-yeux-bleuet.webp": [
+  548,
+  392
+ ],
+ "/images/products/gelee-royale-catalogue.webp": [
+  330,
+  620
+ ],
+ "/images/products/lotion-tonique-bleuet.webp": [
+  322,
+  545
+ ],
+ "/images/products/nutrition-ovarienne-catalogue.webp": [
+  320,
+  600
+ ],
+ "/images/products/pilules-nettoyantes-uterus.webp": [
+  560,
+  330
+ ],
+ "/images/products/pro-slim-tea.webp": [
+  345,
+  465
+ ],
+ "/images/products/savon-olive.webp": [
+  660,
+  368
+ ],
+ "/images/products/serum-visage-bleuet.webp": [
+  337,
+  520
+ ],
+ "/images/products/serviettes-nuit.webp": [
+  432,
+  285
+ ],
+ "/images/products/shampooing-keratine.webp": [
+  215,
+  600
+ ],
+ "/images/products/soja-puissance-catalogue.webp": [
+  335,
+  625
+ ],
+ "/images/products/the-soin-des-seins.webp": [
+  372,
+  615
+ ],
+ "/videos/hero-desktop-poster-final.webp": [
+  1600,
+  900
+ ],
+ "/videos/hero-desktop-poster-logo.webp": [
+  1600,
+  900
+ ],
+ "/videos/hero-mobile-poster-final.webp": [
+  720,
+  1280
+ ],
+ "/videos/hero-mobile-poster-logo.webp": [
+  720,
+  1280
+ ],
+ "/images/collections/spiritual-help.webp": [
+  1800,
+  1350
+ ]
+}
