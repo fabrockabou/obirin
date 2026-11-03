@@ -8,6 +8,7 @@
 // sont simplement omis.
 import { cataloguePage, img } from "./images";
 import monbio from "./products-monbio.json";
+import { affluenceProducts } from "./products-affluence";
 import { spiritualProducts } from "./products-spiritual";
 import type { Product } from "./types";
 
@@ -724,7 +725,9 @@ export const defaultProducts: Product[] = [
   ...(monbio as unknown as Product[]),
   // ───────────────────────── SPIRITUAL HELP ─────────────────────────
   ...spiritualProducts,
+  // ───────────────────────── AFFLUENCE GLOBAL ─────────────────────────
+  ...affluenceProducts,
 ];
 
 /** Produits ajoutés après la première mise en ligne : lib/store.ts les ajoute une seule fois à un stockage existant. */
-export const seedProducts: Product[] = [...spiritualProducts];
+export const seedProducts: Product[] = [...spiritualProducts, ...affluenceProducts];
