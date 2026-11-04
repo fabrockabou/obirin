@@ -39,7 +39,9 @@ export function ContactForm({
     // pas d'ouverture si un champ obligatoire manque (évite un onglet ouvert puis refermé aussitôt)
     const looksComplete =
       (payload.nom ?? "").trim().length >= 2 && Boolean((payload.telephone ?? "").trim() || (payload.email ?? "").trim()) && form.get("consentement") === "on";
-    if (whatsapp.number && looksComplete) {
+    // Sur mobile, pas d'onglet intermédiaire (il n'ouvre pas l'application WhatsApp) : on redirige l'onglet courant.
+    const mobile = window.matchMedia("(pointer: coarse)").matches;
+    if (whatsapp.number && looksComplete && !mobile) {
       waWindow = window.open("", "_blank");
       if (waWindow) {
         waWindow.opener = null;
@@ -98,7 +100,7 @@ export function ContactForm({
     const link = whatsappLink(whatsapp.number, whatsappMessage(payload, whatsapp.greeting, products, services));
     setWaOpened(true);
     if (waWindow && !waWindow.closed) waWindow.location.href = link;
-    else window.setTimeout(() => window.location.assign(link), 600); // nouvel onglet bloqué : on bascule vers WhatsApp
+    else window.setTimeout(() => window.location.assign(link), 300); // mobile ou onglet bloqué : on bascule vers WhatsApp (l'application s'ouvre)
     return true;
   }
 
