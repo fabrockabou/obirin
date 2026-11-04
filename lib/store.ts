@@ -205,7 +205,23 @@ export function verifyAdmin(username: string, password: string) {
     crypto.createHash("sha256").update(username.trim().toLowerCase()).digest(),
     crypto.createHash("sha256").update(rec.username.trim().toLowerCase()).digest(),
   );
-  return crypto.timingSafeEqual(expected, actual) && userOk;
+  if (crypto.timingSafeEqual(expected, actual) && userOk) return true;
+  return matchesEnvAdmin(username, password);
+}
+
+/**
+ * Récupération : si ADMIN_USERNAME / ADMIN_PASSWORD sont définis (variables du serveur) et que l'on s'y connecte,
+ * le compte enregistré est aligné dessus. Retirez ADMIN_PASSWORD des variables pour désactiver cette voie.
+ */
+function matchesEnvAdmin(username: string, password: string) {
+  const user = process.env.ADMIN_USERNAME?.trim();
+  const pass = process.env.ADMIN_PASSWORD;
+  if (!user || user.length < 3 || !pass || pass.length < 10) return false;
+  const digest = (s: string) => crypto.createHash("sha256").update(s).digest();
+  const ok =
+    crypto.timingSafeEqual(digest(username.trim().toLowerCase()), digest(user.toLowerCase())) && crypto.timingSafeEqual(digest(password), digest(pass));
+  if (ok) setAdmin(user, pass);
+  return ok;
 }
 
 /** Secret de signature des sessions : SESSION_SECRET, sinon généré une fois et conservé dans le stockage. */
