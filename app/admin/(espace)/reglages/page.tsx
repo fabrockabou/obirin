@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { NotifyForm } from "@/components/admin/NotifyForm";
 import { PasswordForm, SettingsForm } from "@/components/admin/SettingsForms";
 import { notifyStatus } from "@/lib/notify";
-import { getAdminUsername, getSettings } from "@/lib/store";
+import { STORE_DIR, getAdminUsername, getSettings } from "@/lib/store";
 
 export const metadata: Metadata = { title: "Réglages" };
 
@@ -25,6 +25,9 @@ export default function AdminSettingsPage() {
         status={{ ready: status.ready, reason: status.reason }}
       />
       <PasswordForm username={getAdminUsername() ?? ""} />
+      <p className="text-sm text-ink-soft">
+        Dossier de stockage des données : <code>{STORE_DIR}</code>
+      </p>
     </div>
   );
 }

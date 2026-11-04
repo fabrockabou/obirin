@@ -19,7 +19,13 @@ import type { Adhesion, CollectionSlug, ContactRequest, InscriptionAdhesion, Not
 // sans OBIRIN_STORE_DIR, les données vont dans ~/obirin-data pour survivre aux mises à jour.
 const DEFAULT_STORE_DIR =
   process.env.NODE_ENV === "production" && process.platform !== "win32" ? path.join(os.homedir(), "obirin-data") : path.join(process.cwd(), "data", "store");
-export const STORE_DIR = path.resolve(process.env.OBIRIN_STORE_DIR || DEFAULT_STORE_DIR);
+const requestedDir = path.resolve(process.env.OBIRIN_STORE_DIR || DEFAULT_STORE_DIR);
+// Un dossier situé dans l'application serait effacé au prochain déploiement : en production sous Linux, on l'écarte.
+const insideApp = (dir: string) => !path.relative(process.cwd(), dir).startsWith("..") && !path.isAbsolute(path.relative(process.cwd(), dir));
+export const STORE_DIR =
+  process.env.NODE_ENV === "production" && process.platform !== "win32" && insideApp(requestedDir)
+    ? path.join(os.homedir(), "obirin-data")
+    : requestedDir;
 export const UPLOAD_DIR = path.join(STORE_DIR, "uploads");
 const REQUEST_DIR = path.join(STORE_DIR, "requests");
 const file = (name: string) => path.join(STORE_DIR, name);
