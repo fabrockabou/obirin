@@ -10,6 +10,10 @@ import { site } from "@/data/site";
 import { buildSearchIndex } from "@/lib/search";
 import "./globals.css";
 
+// Les réglages (numéro WhatsApp, SEO…) sont lus dans le stockage à chaque requête : sinon les pages sont figées au moment
+// du build (stockage vide) et chaque déploiement efface le bouton WhatsApp.
+export const dynamic = "force-dynamic";
+
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
