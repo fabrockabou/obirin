@@ -8,3 +8,6 @@ data/.requests
 .env.*
 !.env.example
 data/store
+
+# vidéos publicitaires (non déployées)
+/marketing/

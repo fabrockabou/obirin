@@ -27,6 +27,7 @@ export function ContactForm({
   const [status, setStatus] = useState<Status>({ state: "idle" });
   const [sent, setSent] = useState<Record<string, string>>({});
   const [waOpened, setWaOpened] = useState(false);
+  const [saved, setSaved] = useState(true);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -56,39 +57,59 @@ export function ContactForm({
         body: JSON.stringify({ ...payload, consentement: form.get("consentement") === "on" }),
       });
       const json = (await res.json().catch(() => ({}))) as { ok?: boolean; errors?: Record<string, string>; error?: string };
-      if (res.ok && json.ok) {
-        const link = whatsapp.number ? whatsappLink(whatsapp.number, whatsappMessage(payload, whatsapp.greeting, products, services)) : "";
-        if (waWindow && !waWindow.closed) {
-          waWindow.location.href = link;
-          setWaOpened(true);
-        } else if (link && looksComplete && window.matchMedia("(pointer: coarse)").matches) {
-          // téléphone dont le navigateur bloque les nouveaux onglets : on bascule vers WhatsApp (l'application s'ouvre)
-          setWaOpened(true);
-          window.setTimeout(() => window.location.assign(link), 600);
-        }
-        setSent(payload);
-        setStatus({ state: "success" });
-        return;
-      }
-      waWindow?.close();
       if (json.errors) {
+        waWindow?.close();
         setErrors(json.errors);
         setStatus({ state: "error", message: "Merci de vérifier les champs indiqués." });
         return;
       }
+      // Que la demande ait été enregistrée ou non (panne serveur, limite d'envois…), le client est dirigé vers WhatsApp
+      // avec son message : c'est ce qui compte pour qu'il nous joigne.
+      if (openWhatsapp(payload, waWindow, looksComplete)) {
+        setSent(payload);
+        setSaved(Boolean(res.ok && json.ok));
+        setStatus({ state: "success" });
+        return;
+      }
+      if (res.ok && json.ok) {
+        setSent(payload);
+        setSaved(true);
+        setStatus({ state: "success" });
+        return;
+      }
       setStatus({ state: "error", message: json.error ?? "Une erreur est survenue. Merci de réessayer." });
     } catch {
-      waWindow?.close();
+      if (openWhatsapp(payload, waWindow, looksComplete)) {
+        setSent(payload);
+        setSaved(false);
+        setStatus({ state: "success" });
+        return;
+      }
       setStatus({ state: "error", message: "Connexion impossible. Vérifiez votre réseau puis réessayez." });
     }
+  }
+
+  /** Dirige le client vers WhatsApp (onglet pré-ouvert, sinon même onglet). Renvoie false si rien n'a pu être ouvert. */
+  function openWhatsapp(payload: Record<string, string>, waWindow: Window | null, looksComplete: boolean) {
+    if (!whatsapp.number || !looksComplete) {
+      waWindow?.close();
+      return false;
+    }
+    const link = whatsappLink(whatsapp.number, whatsappMessage(payload, whatsapp.greeting, products, services));
+    setWaOpened(true);
+    if (waWindow && !waWindow.closed) waWindow.location.href = link;
+    else window.setTimeout(() => window.location.assign(link), 600); // nouvel onglet bloqué : on bascule vers WhatsApp
+    return true;
   }
 
   if (status.state === "success") {
     return (
       <div role="status" className="rounded-[2rem] bg-forest p-10 text-ivory">
-        <p className="kicker text-gold-soft">Demande enregistrée</p>
-        <p className="mt-4 font-display text-4xl leading-tight">Merci, votre demande a bien été transmise à l&apos;équipe Obirin.</p>
-        <p className="mt-4 text-ivory/75">Vous serez recontacté(e) au numéro ou à l&apos;adresse indiqués.</p>
+        <p className="kicker text-gold-soft">{saved ? "Demande enregistrée" : "Dernière étape"}</p>
+        <p className="mt-4 font-display text-4xl leading-tight">
+          {saved ? "Merci, votre demande a bien été transmise à l'équipe Obirin." : "Envoyez votre message sur WhatsApp pour que l'équipe Obirin le reçoive."}
+        </p>
+        {saved && <p className="mt-4 text-ivory/75">Vous serez recontacté(e) au numéro ou à l&apos;adresse indiqués.</p>}
         {whatsapp.number && (
           <div className="mt-8 rounded-2xl bg-ivory/10 p-5">
             <p className="text-sm text-ivory/85">
